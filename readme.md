@@ -16,8 +16,6 @@ Development of plugin is done on GitHub: [https://github.com/x-team/wp-dependenc
 
 Pull requests welcome.
 
-[![Build Status](https://travis-ci.org/westonruter/wp-dependency-minification.png)](https://travis-ci.org/westonruter/wp-dependency-minification)
-
 ## Changelog ##
 
 ### 0.9 beta ###
