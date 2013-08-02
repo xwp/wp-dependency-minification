@@ -8,12 +8,6 @@ Author URI: http://x-team.com/
 Text Domain: depmin
 */
 
-/*
-@todo Option to move excluded to start of rep group
-@todo Store page which triggered the save of the minified dependency
-@todo Add checklist of all deps to select them for exclusion. Exclude none by default.
-@todo Provide option for turning off optimized scripts when logged in to WordPress
-*/
 
 class DependencyMinification {
 	static $options = array();

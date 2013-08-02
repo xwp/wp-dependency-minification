@@ -15,6 +15,9 @@ and *automatically* concatenates and minifies them into logical groups. For exma
 together and styles with the same media (e.g. `print`) get minified together. Minification is done via WP-Cron in order
 to prevent race conditions and to ensure that the minification process does not slow down page responses.
 
+This is a reincarnation and rewrite of the [Optimize Scripts](http://wordpress.org/plugins/optimize-scripts/) plugin,
+which this plugin now supersedes.
+
 Features:
 
  * Minified sources are stored in the WP Options table so no special filesystem access is required.
@@ -31,6 +34,7 @@ Features:
  * Data attached to scripts (e.g. via `wp_localize_script`) is also concatenated together and attached to the newly-minified script.
  * WP-Cron is utilized to initiate the minification process in order to prevent race conditions, ensure page responses aren't slowed down.
  * Stale minified scripts and stylesheets remain until replaced by refreshed ones; this ensures that full-page caches which reference stale minified sources won't result in any 404s.
+ * Can serve compressed responses with `gzip` or `deflate`.
 
 Development of plugin is done on GitHub: [https://github.com/x-team/wp-dependency-minification](https://github.com/x-team/wp-dependency-minification)
 
