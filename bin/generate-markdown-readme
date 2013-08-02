@@ -4,7 +4,7 @@ try {
 	$readme_txt_path = __DIR__ . '/../readme.txt';
 	$readme_md_path = __DIR__ . '/../readme.md';
 
-	require_once __DIR__ . '/../php/readme-parser.php';
+	require_once __DIR__ . '/../lib/readme-parser.php';
 
 	$readme = new XTeam_WordPress_Readme_Parser( array( 'path' => $readme_txt_path ) );
 

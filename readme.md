@@ -13,7 +13,7 @@ Automatically concatenates and minifies any scripts and stylesheets enqueued usi
 ## Description ##
 
 This plugin takes all scripts and stylesheets that have been added via `wp_enqueue_script` and `wp_enqueue_style`
-and automatically concatenates and minifies them into logical groups. For exmaple, scripts in the footer get grouped
+and *automatically* concatenates and minifies them into logical groups. For exmaple, scripts in the footer get grouped
 together and styles with the same media (e.g. `print`) get minified together. Minification is done via WP-Cron in order
 to prevent race conditions and to ensure that the minification process does not slow down page responses.
 
