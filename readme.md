@@ -42,6 +42,15 @@ Development of plugin is done on GitHub: [https://github.com/x-team/wp-dependenc
 
 Pull requests welcome.
 
+If you are using Nginx with the default Varying Vagrant Vagrants config, you'll want to remove `css` and `js` from this rule:
+
+    # Handle all static assets by serving the file directly. Add directives 
+    # to send expires headers and turn off 404 error logging.
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+        expires 24h;
+        log_not_found off;
+    }
+
 ## Changelog ##
 
 ### 0.9 beta ###

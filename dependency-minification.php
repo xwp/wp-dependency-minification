@@ -12,7 +12,6 @@ Text Domain: depmin
 class DependencyMinification {
 	static $options = array();
 	protected static $minified_count = 0;
-	protected static $request_matches = null;
 	static $admin_page_hook;
 
 	const DEFAULT_ENDPOINT = '_minify';
