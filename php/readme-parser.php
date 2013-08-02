@@ -5,9 +5,7 @@
  * See: https://github.com/markjaquith/WordPress-Plugin-Readme-Parser
  */
 
-namespace SettingsRevisions;
-
-class ReadmeParser {
+class XTeam_WordPress_Readme_Parser {
 	public $path;
 	public $source;
 	public $title = '';
