@@ -5,7 +5,7 @@ Automatically concatenates and minifies any scripts and stylesheets enqueued usi
 
 **Contributors:** [x-team](http://profiles.wordpress.org/x-team), [westonruter](http://profiles.wordpress.org/westonruter)  
 **Tags:** [dependencies](http://wordpress.org/plugins/tags/dependencies), [minify](http://wordpress.org/plugins/tags/minify), [concatenate](http://wordpress.org/plugins/tags/concatenate), [compress](http://wordpress.org/plugins/tags/compress), [js](http://wordpress.org/plugins/tags/js), [javascript](http://wordpress.org/plugins/tags/javascript), [scripts](http://wordpress.org/plugins/tags/scripts), [css](http://wordpress.org/plugins/tags/css), [styles](http://wordpress.org/plugins/tags/styles), [stylesheets](http://wordpress.org/plugins/tags/stylesheets), [gzip](http://wordpress.org/plugins/tags/gzip), [yslow](http://wordpress.org/plugins/tags/yslow), [pagespeed](http://wordpress.org/plugins/tags/pagespeed)  
-**Requires at least:**   
+**Requires at least:** 3.5  
 **Tested up to:** 3.6  
 **Stable tag:** trunk (master)  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
