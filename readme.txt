@@ -33,9 +33,10 @@ Features:
  * If the minification process errors out, the original unminified sources are served and the error is cached for 1 hour (by default, configured via `cache_control_max_age_error`) to prevent back-to-back crons from continually attempting to minify in perpetuity.
  * Cached minified sources are served with `Last-Modified` and `ETag` responses headers and requests will honor `If-None-Match` and `If-Modified-Since` to return `304 Not Modified` responses (configurable via the `allow_not_modified_responses` option).
  * Data attached to scripts (e.g. via `wp_localize_script`) is also concatenated together and attached to the newly-minified script.
- * WP-Cron is utilized to initiate the minification process in order to prevent race conditions, ensure page responses aren't slowed down.
+ * WP-Cron is utilized to initiate the minification process in order to prevent race conditions, and to ensure that page responses aren't slowed down.
  * Stale minified scripts and stylesheets remain until replaced by refreshed ones; this ensures that full-page caches which reference stale minified sources won't result in any 404s.
  * Can serve compressed responses with `gzip` or `deflate`.
+ * Transforms relatives paths in stylesheets (e.g. background-images) to absolute ones, so that they don't 404.
 
 Development of plugin is done on GitHub: [https://github.com/x-team/wp-dependency-minification](https://github.com/x-team/wp-dependency-minification)
 
