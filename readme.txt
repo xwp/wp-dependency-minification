@@ -1,6 +1,6 @@
 === Dependency Minification ===
 Contributors:      X-team, westonruter
-Tags:              dependencies, minify, concatenate, compress, js, javascript, scripts, css, styles, stylesheets, gzip, yslow, pagespeed
+Tags:              performance, dependencies, minify, concatenate, compress, js, javascript, scripts, css, styles, stylesheets, gzip, yslow, pagespeed, caching
 Tested up to:      3.6
 Requires at least: 3.5
 Stable tag:        trunk
@@ -42,7 +42,7 @@ Development of plugin is done on GitHub: [https://github.com/x-team/wp-dependenc
 
 Pull requests welcome.
 
-If you are using Nginx with the default Varying Vagrant Vagrants config, you'll want to remove `css|js` from this rule in `nginx-wp-common.conf`:
+If you are using Nginx with the default Varying Vagrant Vagrants config, you'll want to remove `css|js` from this rule in `nginx-wp-common.conf` (or remove the rule altogether):
 
     # Handle all static assets by serving the file directly. Add directives 
     # to send expires headers and turn off 404 error logging.
