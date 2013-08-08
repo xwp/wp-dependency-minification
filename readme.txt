@@ -42,7 +42,7 @@ Development of plugin is done on GitHub: [https://github.com/x-team/wp-dependenc
 
 Pull requests welcome.
 
-If you are using Nginx with the default Varying Vagrant Vagrants config, you'll want to remove `css` and `js` from this rule:
+If you are using Nginx with the default Varying Vagrant Vagrants config, you'll want to remove `css|js` from this rule in `nginx-wp-common.conf`:
 
     # Handle all static assets by serving the file directly. Add directives 
     # to send expires headers and turn off 404 error logging.
