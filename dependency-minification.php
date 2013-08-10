@@ -261,7 +261,12 @@ class Dependency_Minification {
 
 				<?php if ( empty( $minified_dependencies ) ) : ?>
 					<p>
-						<em><?php esc_html_e( 'There are no minified dependencies yet. Try browsing the site.', 'depmin' ) ?></em>
+						<em><?php
+								if ( self::$options['disable_if_wp_debug'] && ( defined( 'WP_DEBUG' ) && WP_DEBUG ) )
+							        esc_html_e( 'Dependency Minification is disabled. Disable WP_DEBUG or set disable_if_wp_debug to false', 'depmin' );
+								else
+									esc_html_e( 'There are no minified dependencies yet. Try browsing the site.', 'depmin' );
+						?></em>
 					</p>
 				<?php else : ?>
 					<div class="tablenav top">
