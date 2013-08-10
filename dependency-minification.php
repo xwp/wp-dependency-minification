@@ -222,7 +222,7 @@ class DependencyMinification {
 		$nonce = wp_create_nonce( self::AJAX_ACTION );
 		?>
 		<div class="wrap">
-			<div class="icon32" id="icon-options-general"><br></div>
+			<div class="icon32" id="icon-tools"><br></div>
 			<h2><?php esc_html_e( 'Dependency Minification', 'depmin' ) ?></h2>
 
 			<?php  ?>
