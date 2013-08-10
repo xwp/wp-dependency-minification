@@ -468,7 +468,7 @@ class Dependency_Minification {
 		}
 
 		// @todo There should be a better way to determine which group we are in
-		$current_group = (int)self::$is_footer[$type]; // false => 0, true => 1
+		$current_group = (int) self::$is_footer[$type]; // false => 0, true => 1
 
 		$handles_in_group = array();
 		foreach ( $handles as $handle ) {
@@ -702,7 +702,7 @@ class Dependency_Minification {
 		$bundles = array();
 		foreach ( $handles as $handle ) {
 			$dep = &$wp_deps->registered[$handle];
-			$extra = (array)$dep->extra;
+			$extra = (array) $dep->extra;
 			if ( is_a($wp_deps, 'WP_Styles') ) {
 				$extra['media'] = is_string($dep->args) ? $dep->args : 'all';
 			}
@@ -810,7 +810,7 @@ class Dependency_Minification {
 
 			$contents .= $minified_contents;
 			$cached['unminified_size'] = $unminified_size;
-			$max_age = apply_filters( 'dependency_minification_cache_control_max_age', (int)self::$options['cache_control_max_age_cache'], $srcs );
+			$max_age = apply_filters( 'dependency_minification_cache_control_max_age', (int) self::$options['cache_control_max_age_cache'], $srcs );
 			$cached['contents'] = $contents;
 			$cached['expires'] = time() + $max_age;
 			$cached['error'] = null;
@@ -823,7 +823,7 @@ class Dependency_Minification {
 				join( ',', $srcs )
 			) );
 			$cached['error'] = $e->getMessage();
-			$max_age = apply_filters( 'dependency_minification_cache_control_max_age_error', (int)self::$options['cache_control_max_age_error'], $srcs );
+			$max_age = apply_filters( 'dependency_minification_cache_control_max_age_error', (int) self::$options['cache_control_max_age_error'], $srcs );
 			$cached['expires'] = time() + $max_age;
 		}
 		$cached['etag'] = self::generate_etag( $src_hash, $ver_hash );
