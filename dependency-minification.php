@@ -59,6 +59,7 @@ class Dependency_Minification {
 		add_action( 'admin_notices', array( __CLASS__, 'admin_notices' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue_scripts' ) );
 		add_action( 'wp_ajax_' . self::AJAX_ACTION, array( __CLASS__, 'admin_ajax_handler' ) );
+		add_filter( 'plugin_action_links', array( __CLASS__, 'admin_plugin_action_links' ), 10, 2 );
 	}
 
 	static function hook_rewrites() {
@@ -212,6 +213,20 @@ class Dependency_Minification {
 		$redirect_url = add_query_arg( 'updated-action', $_REQUEST['depmin_task'], $redirect_url );
 		wp_redirect( $redirect_url );
 		exit;
+	}
+
+	/**
+	 * @filter plugin_action_links
+	 */
+	static function admin_plugin_action_links( $links, $file ) {
+
+	    if ( plugin_basename( __FILE__ ) === $file ) {
+	    	$admin_page_url  = admin_url( sprintf( '%s?page=%s', self::ADMIN_PARENT_PAGE, self::ADMIN_PAGE_SLUG ) );
+	    	$admin_page_link = sprintf( '<a href="%s">%s</a>', esc_url( $admin_page_url ), esc_html__( 'Settings', 'depmin' ) );
+	        array_push( $links, $admin_page_link );
+	    }
+
+	    return $links;
 	}
 
 	static function admin_page() {
