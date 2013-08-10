@@ -2,7 +2,7 @@
 /*
 Plugin Name: Dependency Minification
 Description: Concatenates and minifies scripts and stylesheets.
-Version: 0.9beta
+Version: 0.9.1
 Author: X-Team
 Author URI: http://x-team.com/
 Text Domain: depmin
