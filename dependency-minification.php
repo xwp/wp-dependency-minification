@@ -219,19 +219,17 @@ class Dependency_Minification {
 	 * @filter plugin_action_links
 	 */
 	static function admin_plugin_action_links( $links, $file ) {
-
-	    if ( plugin_basename( __FILE__ ) === $file ) {
-	    	$admin_page_url  = admin_url( sprintf( '%s?page=%s', self::ADMIN_PARENT_PAGE, self::ADMIN_PAGE_SLUG ) );
-	    	$admin_page_link = sprintf( '<a href="%s">%s</a>', esc_url( $admin_page_url ), esc_html__( 'Settings', 'depmin' ) );
-	        array_push( $links, $admin_page_link );
-	    }
-
-	    return $links;
+		if ( plugin_basename( __FILE__ ) === $file ) {
+			$admin_page_url  = admin_url( sprintf( '%s?page=%s', self::ADMIN_PARENT_PAGE, self::ADMIN_PAGE_SLUG ) );
+			$admin_page_link = sprintf( '<a href="%s">%s</a>', esc_url( $admin_page_url ), esc_html__( 'Settings', 'depmin' ) );
+			array_push( $links, $admin_page_link );
+		}
+		return $links;
 	}
 
 	static function admin_page() {
-		if (!current_user_can(self::$options['admin_page_capability'])) {
-			wp_die('You cannot access this page.');
+		if ( ! current_user_can( self::$options['admin_page_capability'] ) ) {
+			wp_die( __( 'You cannot access this page.', 'depmin' ) );
 		}
 		$nonce = wp_create_nonce( self::AJAX_ACTION );
 		?>
