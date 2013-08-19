@@ -3,7 +3,7 @@
 
 Automatically concatenates and minifies any scripts and stylesheets enqueued using the standard dependency system.
 
-**Contributors:** [x-team](http://profiles.wordpress.org/x-team), [westonruter](http://profiles.wordpress.org/westonruter), [fjarrett](http://profiles.wordpress.org/fjarrett)  
+**Contributors:** [x-team](http://profiles.wordpress.org/x-team), [westonruter](http://profiles.wordpress.org/westonruter), [fjarrett](http://profiles.wordpress.org/fjarrett), [c3mdigital](http://profiles.wordpress.org/c3mdigital)  
 **Tags:** [performance](http://wordpress.org/plugins/tags/performance), [dependencies](http://wordpress.org/plugins/tags/dependencies), [minify](http://wordpress.org/plugins/tags/minify), [concatenate](http://wordpress.org/plugins/tags/concatenate), [compress](http://wordpress.org/plugins/tags/compress), [js](http://wordpress.org/plugins/tags/js), [javascript](http://wordpress.org/plugins/tags/javascript), [scripts](http://wordpress.org/plugins/tags/scripts), [css](http://wordpress.org/plugins/tags/css), [styles](http://wordpress.org/plugins/tags/styles), [stylesheets](http://wordpress.org/plugins/tags/stylesheets), [gzip](http://wordpress.org/plugins/tags/gzip), [yslow](http://wordpress.org/plugins/tags/yslow), [pagespeed](http://wordpress.org/plugins/tags/pagespeed), [caching](http://wordpress.org/plugins/tags/caching)  
 **Requires at least:** 3.5  
 **Tested up to:** 3.6  
@@ -53,6 +53,9 @@ If you are using Nginx with the default Varying Vagrant Vagrants config, you'll 
     }
 
 ## Changelog ##
+
+### 0.9.2 ###
+Show alert if WP_DEBUG is disabling dependency minification ([#12](https://github.com/x-team/wp-dependency-minification/issues/12)). Props [c3mdigital](http://profiles.wordpress.org/c3mdigital/).
 
 ### 0.9.1 ###
 Add a settings link to the list of plugin action links ([#13](https://github.com/x-team/wp-dependency-minification/issues/13)). Props [fjarrett](http://profiles.wordpress.org/fjarrett/).

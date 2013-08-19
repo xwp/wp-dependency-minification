@@ -1,5 +1,5 @@
 === Dependency Minification ===
-Contributors:      X-team, westonruter, fjarrett
+Contributors:      X-team, westonruter, fjarrett, c3mdigital
 Tags:              performance, dependencies, minify, concatenate, compress, js, javascript, scripts, css, styles, stylesheets, gzip, yslow, pagespeed, caching
 Tested up to:      3.6
 Requires at least: 3.5
@@ -53,6 +53,9 @@ If you are using Nginx with the default Varying Vagrant Vagrants config, you'll 
 
 
 == Changelog ==
+
+= 0.9.2 =
+Show alert if WP_DEBUG is disabling dependency minification ([#12](https://github.com/x-team/wp-dependency-minification/issues/12)). Props [c3mdigital](http://profiles.wordpress.org/c3mdigital/).
 
 = 0.9.1 =
 Add a settings link to the list of plugin action links ([#13](https://github.com/x-team/wp-dependency-minification/issues/13)). Props [fjarrett](http://profiles.wordpress.org/fjarrett/).
