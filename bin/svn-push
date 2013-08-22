@@ -24,6 +24,13 @@ if [ $current_branch != 'master' ]; then
 	git checkout master
 fi
 
+bin/generate-markdown-readme
+git add readme.md
+if [ -n "$(git status --porcelain readme.md)" ]; then
+	echo "Please commit (--amend?) the updated readme.md"
+	exit 1
+fi
+
 git pull origin master
 git push origin master
 svn_url=$(cat svn-url)
