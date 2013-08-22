@@ -9,6 +9,10 @@ if [ -n "$(git status -s -uno)" ]; then
 	echo "Error: Git state has modified or staged files. Commit or reset." >&2
 	exit 1
 fi
+if [ ! -e svn-url ]; then
+	echo "Error: Missing svn-url file" >&2
+	exit 1
+fi
 
 git_root=$(pwd)
 
@@ -16,8 +20,9 @@ current_branch=$(git rev-parse --abbrev-ref HEAD)
 if [ $current_branch != 'master' ]; then
 	git checkout master
 fi
-git pull
-svn_url=https://plugins.svn.wordpress.org/dependency-minification/
+git pull origin master
+git push origin master
+svn_url=$(cat svn-url)
 svn_repo_dir=$git_root/svn
 
 if [ ! -e $svn_repo_dir ]; then
