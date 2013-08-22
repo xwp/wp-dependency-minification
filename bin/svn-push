@@ -47,14 +47,19 @@ if [ -z "$plugin_version" ]; then
 	exit 1
 fi
 
+if ! grep -q "$plugin_version" readme.txt; then
+	echo "Please update readme.txt to include $plugin_version in changelog"
+	exit 1
+fi
+
 if git show-ref --tags --quiet --verify -- "refs/tags/$plugin_version"; then
 	echo "Plugin version $plugin_version already tagged. Please bump version and try again"
 	exit 1
 fi
 
 echo "Tagging plugin version $plugin_version"
-git tag $plugin_version master
-git push origin $plugin_version
+git tag "$plugin_version" master
+git push origin "$plugin_version"
 
 if [ ! -e $svn_repo_dir ]; then
 	svn checkout $svn_url $svn_repo_dir
