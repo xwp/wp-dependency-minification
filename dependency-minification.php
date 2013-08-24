@@ -150,12 +150,15 @@ class Dependency_Minification {
 	 */
 	static function admin_notices() {
 		// Show a notice to notify user that pretty urls is disabled, hence the plugin won't work
-		global $wp_rewrite;
-		if ( $wp_rewrite->permalink_structure == '' ) {
+		if ( empty( $GLOBALS['wp_rewrite']->permalink_structure ) ) {
 			?>
 			<div class="error">
 				<p><?php
-				echo __( '<strong>Dependency Minifier</strong> Error: Pretty URLs are not enabled in your Settings, which is required for this plugin to operate.', 'depmin' );
+				echo sprintf( 
+					'<strong>%1$s</strong>: %2$s', 
+					__('Dependency Minification', 'depmin'), 
+					__('Pretty permalinks are not enabled in your Settings, which is required for this plugin to operate.', 'depmin' )
+				);
 				?></p>
 			</div>
 			<?php
@@ -492,7 +495,7 @@ class Dependency_Minification {
 		 * Plugin is automatically disabled if pretty permalinks is not activated
 		 */
 		$disabled = self::$options['disable_if_wp_debug'] ? ( defined( 'WP_DEBUG' ) && WP_DEBUG ) : false;
-		$disabled = empty($GLOBALS['wp_rewrite']->permalink_structure);
+		$disabled = $disabled || empty( $GLOBALS['wp_rewrite']->permalink_structure );
 		$disabled = $disabled || ( defined( 'DEPENDENCY_MINIFICATION_DEFAULT_DISABLED' ) && DEPENDENCY_MINIFICATION_DEFAULT_DISABLED );
 		$disabled = apply_filters( 'dependency_minification_disabled', $disabled, $handles, $type );
 		$disabled = apply_filters( "dependency_minification_disabled_{$type}", $disabled, $handles );
