@@ -155,9 +155,12 @@ class Dependency_Minification {
 			<div class="error">
 				<p><?php
 				echo sprintf( 
-					'<strong>%1$s</strong>: %2$s', 
-					__('Dependency Minification', 'depmin'), 
-					__('Pretty permalinks are not enabled in your Settings, which is required for this plugin to operate.', 'depmin' )
+					'<strong>%1$s</strong>: %2$s <br/>%3$s <a href="%4$s">%5$s</a>', 
+					__( 'Dependency Minification', 'depmin' ), 
+					__( 'Pretty permalinks are not enabled in your Settings, which is required for this plugin to operate.', 'depmin' ),
+					__( 'You can enable Pretty permalinks from ', 'depmin' ),
+					admin_url( 'options-permalink.php' ),
+					__( 'Permalinks' )
 				);
 				?></p>
 			</div>
