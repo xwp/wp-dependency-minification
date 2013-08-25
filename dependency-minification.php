@@ -55,17 +55,17 @@ class Dependency_Minification {
 			in_array( $GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php' ) )
 		);
 		$disabled = (
-			! empty( self::$options['disabled_on_conditions']['all'] ) 
-			|| ( !empty( self::$options['disabled_on_conditions']['loggedin'] ) && is_user_logged_in() ) 
-			|| ( !empty( self::$options['disabled_on_conditions']['admin'] ) && is_user_logged_in() && current_user_can( 'manage_plugins' ) ) 
-			|| ( !empty( self::$options['disabled_on_conditions']['queryvar']['enabled'] ) 
+			! empty( self::$options['disabled_on_conditions']['all'] )
+			|| ( !empty( self::$options['disabled_on_conditions']['loggedin'] ) && is_user_logged_in() )
+			|| ( !empty( self::$options['disabled_on_conditions']['admin'] ) && is_user_logged_in() && current_user_can( 'manage_options' ) )
+			|| ( !empty( self::$options['disabled_on_conditions']['queryvar']['enabled'] )
 				&& !empty( self::$options['disabled_on_conditions']['queryvar']['enabled'] )
 				&& !empty( $_GET[ self::$options['disabled_on_conditions']['queryvar']['value'] ] )
 				)
 			);
 
-		if ( 
-			$is_frontend 
+		if (
+			$is_frontend
 			&&
 			! $disabled
 			) {
@@ -174,7 +174,7 @@ class Dependency_Minification {
 			?>
 			<div class="error">
 				<p><?php
-				echo sprintf( 
+				echo sprintf(
 					'<strong>%1$s</strong>: %2$s',
 					__( 'Dependency Minification', 'depmin' ),
 					sprintf(
