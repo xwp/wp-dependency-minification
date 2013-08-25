@@ -502,10 +502,10 @@ class Dependency_Minification {
 		 * Plugin is automatically disabled if pretty permalinks is not activated
 		 */
 		$disabled = self::$options['disable_if_wp_debug'] ? ( defined( 'WP_DEBUG' ) && WP_DEBUG ) : false;
-		$disabled = $disabled || empty( $GLOBALS['wp_rewrite']->permalink_structure );
 		$disabled = $disabled || ( defined( 'DEPENDENCY_MINIFICATION_DEFAULT_DISABLED' ) && DEPENDENCY_MINIFICATION_DEFAULT_DISABLED );
 		$disabled = apply_filters( 'dependency_minification_disabled', $disabled, $handles, $type );
 		$disabled = apply_filters( "dependency_minification_disabled_{$type}", $disabled, $handles );
+		$disabled = $disabled || empty( $GLOBALS['wp_rewrite']->permalink_structure );
 		if ( $disabled ) {
 			return $handles;
 		}
