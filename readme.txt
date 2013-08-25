@@ -54,6 +54,9 @@ If you are using Nginx with the default Varying Vagrant Vagrants config, you'll 
 
 == Changelog ==
 
+= 0.9.4 =
+Issue warning if pretty permalinks are not enabled ([#16](https://github.com/x-team/wp-dependency-minification/issues/16)). Props [shadyvb](http://profiles.wordpress.org/shadyvb/).
+
 = 0.9.3 =
 Prevent default built-in scripts from breaking minification groups ([#9](https://github.com/x-team/wp-dependency-minification/issues/9)). Props [shadyvb](http://profiles.wordpress.org/shadyvb/).
 
