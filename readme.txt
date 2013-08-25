@@ -54,6 +54,9 @@ If you are using Nginx with the default Varying Vagrant Vagrants config, you'll 
 
 == Changelog ==
 
+= 0.9.3 =
+Prevent default built-in scripts from breaking minification groups ([#9](https://github.com/x-team/wp-dependency-minification/issues/9)). Props [shadyvb](http://profiles.wordpress.org/shadyvb/).
+
 = 0.9.2 =
 Show alert if WP_DEBUG is disabling dependency minification ([#12](https://github.com/x-team/wp-dependency-minification/issues/12)). Props [c3mdigital](http://profiles.wordpress.org/c3mdigital/).
 
