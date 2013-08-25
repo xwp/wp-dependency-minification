@@ -272,6 +272,7 @@ class Dependency_Minification {
 			$options = get_option( 'dependency_minification_options' );
 			$options['exclude_dependencies']   = array_filter( preg_split( "#[\n\r]+#", $_REQUEST['options']['exclude_dependencies'] ) );
 			$options['disabled_on_conditions'] = $_REQUEST['options']['disabled_on_conditions'];
+			$options['default_exclude_remote_dependencies'] = isset( $_REQUEST['options']['default_exclude_remote_dependencies'] );
 			update_option( 'dependency_minification_options', $options );
 		}
 
@@ -516,6 +517,15 @@ class Dependency_Minification {
 								</td>
 							</tr>
 							<tr>
+								<th><?php esc_html_e( 'Exclude remote dependencies', 'depmin' ) ?>
+									<small><?php esc_html_e( 'Makes the default is to exclude remote dependencies', 'depmin' ) ?></small></th>
+								<td>
+									<label for="options[default_exclude_remote_dependencies]">
+										<input type="checkbox" name="options[default_exclude_remote_dependencies]" id="options[default_exclude_remote_dependencies]" <?php echo checked( self::$options['default_exclude_remote_dependencies'] ) ?> value="1">
+									</label>
+								</td>
+							</tr>
+							<tr>
 								<th><?php esc_html_e( 'Disable minification for:', 'depmin' ) ?>
 									<small><?php esc_html_e( 'Select conditions where minification should not happen', 'depmin' ) ?></small></th>
 								<td>
@@ -535,7 +545,7 @@ class Dependency_Minification {
 								</td>
 							</tr>
 							<tr>
-								<th><?php esc_html_e( 'Exclude resources' ) ?>
+								<th><?php esc_html_e( 'Exclude resources', 'depmin' ) ?>
 									<small><?php esc_html_e( 'Add URLs of resources to exclude from minification, one resource per line. Note that you can just add a script name, or the last portion of the URL so it matches.', 'depmin' ) ?></small></th>
 								<td><textarea name="options[exclude_dependencies]" id="options[exclude_dependencies]" rows="10" class="widefat"><?php echo esc_html( join( "\n", self::$options['exclude_dependencies'] ) ) ?></textarea></td>
 							</tr>
