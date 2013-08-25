@@ -149,6 +149,28 @@ class Dependency_Minification {
 	 * @action admin_notices
 	 */
 	static function admin_notices() {
+		// Show a notice to notify user that pretty urls is disabled, hence the plugin won't work
+		if ( empty( $GLOBALS['wp_rewrite']->permalink_structure ) ) {
+			?>
+			<div class="error">
+				<p><?php
+				echo sprintf( 
+					'<strong>%1$s</strong>: %2$s',
+					__( 'Dependency Minification', 'depmin' ),
+					sprintf(
+						__( 'Pretty permalinks are not enabled in your %1$s, which is required for this plugin to operate. Select something other than Default (e.g. ?p=123)', 'depmin' ),
+						sprintf(
+							'<a href="%1$s">%2$s</a>',
+							admin_url( 'options-permalink.php' ),
+							__( 'Permalinks Settings', 'depmin' )
+						)
+					)
+				);
+				?></p>
+			</div>
+			<?php
+		}
+
 		if ( get_current_screen()->id !== self::$admin_page_hook ) {
 			return;
 		}
@@ -477,11 +499,13 @@ class Dependency_Minification {
 		 * Determine if minification is enabled for the provided $handles.
 		 * Note that we cannot use the $concatenate_scripts global set by script_concat_settings
 		 * because it is intended to only be used in the WP Admin
+		 * Plugin is automatically disabled if pretty permalinks is not activated
 		 */
 		$disabled = self::$options['disable_if_wp_debug'] ? ( defined( 'WP_DEBUG' ) && WP_DEBUG ) : false;
 		$disabled = $disabled || ( defined( 'DEPENDENCY_MINIFICATION_DEFAULT_DISABLED' ) && DEPENDENCY_MINIFICATION_DEFAULT_DISABLED );
 		$disabled = apply_filters( 'dependency_minification_disabled', $disabled, $handles, $type );
 		$disabled = apply_filters( "dependency_minification_disabled_{$type}", $disabled, $handles );
+		$disabled = $disabled || empty( $GLOBALS['wp_rewrite']->permalink_structure );
 		if ( $disabled ) {
 			return $handles;
 		}
