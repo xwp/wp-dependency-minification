@@ -155,18 +155,22 @@ class Dependency_Minification {
 			<div class="error">
 				<p><?php
 				echo sprintf( 
-					'<strong>%1$s</strong>: %2$s <br/>%3$s <a href="%4$s">%5$s</a>', 
-					__( 'Dependency Minification', 'depmin' ), 
-					__( 'Pretty permalinks are not enabled in your Settings, which is required for this plugin to operate.', 'depmin' ),
-					__( 'You can enable Pretty permalinks from ', 'depmin' ),
-					admin_url( 'options-permalink.php' ),
-					__( 'Permalinks' )
+					'<strong>%1$s</strong>: %2$s',
+					__( 'Dependency Minification', 'depmin' ),
+					sprintf(
+						__( 'Pretty permalinks are not enabled in your %1$s, which is required for this plugin to operate. Select something other than Default (e.g. ?p=123)', 'depmin' ),
+						sprintf(
+							'<a href="%1$s">%2$s</a>',
+							admin_url( 'options-permalink.php' ),
+							__( 'Permalinks Settings', 'depmin' )
+						)
+					)
 				);
 				?></p>
 			</div>
 			<?php
 		}
-				
+
 		if ( get_current_screen()->id !== self::$admin_page_hook ) {
 			return;
 		}
