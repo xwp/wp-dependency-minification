@@ -634,6 +634,9 @@ class Dependency_Minification {
 				}
 				$wp_deps->set_group( $new_handle, /*recursive*/false, $current_group );
 
+				// We may have multiple scripts in a group adding extra data, must track and append
+				if ( !isset( $concatenate_scripts[$new_handle] ) ) $concatenated_data[$new_handle] = '';
+
 				foreach ( $group['handles'] as $handle ) {
 
 					// Aggregate data from scripts (e.g. wp_localize_script)
@@ -644,12 +647,11 @@ class Dependency_Minification {
 							$data[ $handle ] = $wp_deps->get_data( $handle, $key );
 						}
 						if ( 'data' === $key ) {
-							$concatenated_data = '';
 							foreach ( $data as $data_handle => $data_value ) {
-								$concatenated_data .= "/* wp_localize_script($data_handle): */\n";
-								$concatenated_data .= "$data_value\n\n";
+								$concatenated_data[$new_handle] .= "/* wp_localize_script($data_handle): */\n";
+								$concatenated_data[$new_handle] .= "$data_value\n\n";
 							}
-							$data = $concatenated_data;
+							$data = $concatenated_data[$new_handle];
 						} else {
 							for ( $i = 1; $i < count($data); $i += 1 ) {
 								assert( $data[0] === $data[$i] );
