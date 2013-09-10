@@ -1,4 +1,7 @@
 #!/bin/bash
+# Given a svn-url file one directory up, export the latest git commits to the specified SVN repo.
+# Create a git release tag from the verison specified in the plugin file.
+# Author: Weston Ruter (@westonruter)
 
 set -e
 
@@ -9,6 +12,10 @@ if [ -n "$(git status -s -uno)" ]; then
 	echo "Error: Git state has modified or staged files. Commit or reset." >&2
 	exit 1
 fi
+if [ ! -e svn-url ]; then
+	echo "Error: Missing svn-url file" >&2
+	exit 1
+fi
 
 git_root=$(pwd)
 
@@ -16,9 +23,43 @@ current_branch=$(git rev-parse --abbrev-ref HEAD)
 if [ $current_branch != 'master' ]; then
 	git checkout master
 fi
-git pull
-svn_url=https://plugins.svn.wordpress.org/dependency-minification/
+
+bin/generate-markdown-readme
+git add readme.md
+if [ -n "$(git status --porcelain readme.md)" ]; then
+	echo "Please commit (--amend?) the updated readme.md"
+	exit 1
+fi
+
+git pull origin master
+git push origin master
+svn_url=$(cat svn-url)
 svn_repo_dir=$git_root/svn
+
+for php in *.php; do
+	if grep -q 'Plugin Name:' $php && grep -q 'Version:' $php; then
+		plugin_version=$(cat $php | grep 'Version:' | sed 's/.*Version: *//')
+	fi
+done
+
+if [ -z "$plugin_version" ]; then
+	echo "Unable to find plugin version"
+	exit 1
+fi
+
+if ! grep -q "$plugin_version" readme.txt; then
+	echo "Please update readme.txt to include $plugin_version in changelog"
+	exit 1
+fi
+
+if git show-ref --tags --quiet --verify -- "refs/tags/$plugin_version"; then
+	echo "Plugin version $plugin_version already tagged. Please bump version and try again"
+	exit 1
+fi
+
+echo "Tagging plugin version $plugin_version"
+git tag "$plugin_version" master
+git push origin "$plugin_version"
 
 if [ ! -e $svn_repo_dir ]; then
 	svn checkout $svn_url $svn_repo_dir

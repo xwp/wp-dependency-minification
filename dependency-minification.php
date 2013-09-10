@@ -2,7 +2,7 @@
 /*
 Plugin Name: Dependency Minification
 Description: Concatenates and minifies scripts and stylesheets.
-Version: 0.9.1
+Version: 0.9.4
 Author: X-Team
 Author URI: http://x-team.com/
 Text Domain: depmin
@@ -151,6 +151,28 @@ class Dependency_Minification {
 	 * @action admin_notices
 	 */
 	static function admin_notices() {
+		// Show a notice to notify user that pretty urls is disabled, hence the plugin won't work
+		if ( empty( $GLOBALS['wp_rewrite']->permalink_structure ) ) {
+			?>
+			<div class="error">
+				<p><?php
+				echo sprintf( 
+					'<strong>%1$s</strong>: %2$s',
+					__( 'Dependency Minification', 'depmin' ),
+					sprintf(
+						__( 'Pretty permalinks are not enabled in your %1$s, which is required for this plugin to operate. Select something other than Default (e.g. ?p=123)', 'depmin' ),
+						sprintf(
+							'<a href="%1$s">%2$s</a>',
+							admin_url( 'options-permalink.php' ),
+							__( 'Permalinks Settings', 'depmin' )
+						)
+					)
+				);
+				?></p>
+			</div>
+			<?php
+		}
+
 		if ( get_current_screen()->id !== self::$admin_page_hook ) {
 			return;
 		}
@@ -274,9 +296,15 @@ class Dependency_Minification {
 				}
 				?>
 
+				<?php if ( self::$options['disable_if_wp_debug'] && ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ): ?>
+					<div class="error">
+						<p><?php esc_html_e( 'Dependency Minification is disabled. Any minified dependencies below are cached. To minify new dependencies, disable WP_DEBUG or filter disable_if_wp_debug to be false.', 'depmin' ); ?></p>
+					</div>
+				<?php endif; ?>
+
 				<?php if ( empty( $minified_dependencies ) ) : ?>
 					<p>
-						<em><?php esc_html_e( 'There are no minified dependencies yet. Try browsing the site.', 'depmin' ) ?></em>
+						<em><?php esc_html_e( 'There are no minified dependencies yet. Try browsing the site.', 'depmin' ); ?></em>
 					</p>
 				<?php else : ?>
 					<div class="tablenav top">
@@ -473,11 +501,13 @@ class Dependency_Minification {
 		 * Determine if minification is enabled for the provided $handles.
 		 * Note that we cannot use the $concatenate_scripts global set by script_concat_settings
 		 * because it is intended to only be used in the WP Admin
+		 * Plugin is automatically disabled if pretty permalinks is not activated
 		 */
 		$disabled = self::$options['disable_if_wp_debug'] ? ( defined( 'WP_DEBUG' ) && WP_DEBUG ) : false;
 		$disabled = $disabled || ( defined( 'DEPENDENCY_MINIFICATION_DEFAULT_DISABLED' ) && DEPENDENCY_MINIFICATION_DEFAULT_DISABLED );
 		$disabled = apply_filters( 'dependency_minification_disabled', $disabled, $handles, $type );
 		$disabled = apply_filters( "dependency_minification_disabled_{$type}", $disabled, $handles );
+		$disabled = $disabled || empty( $GLOBALS['wp_rewrite']->permalink_structure );
 		if ( $disabled ) {
 			return $handles;
 		}
@@ -724,6 +754,10 @@ class Dependency_Minification {
 			unset($extra['suffix']);
 			unset($extra['rtl']);
 			unset($extra['data']);
+			// Default scripts are not assigned 'group', so we use the original 'deps->args' value
+			if ( is_a( $wp_deps, 'WP_Scripts' ) && empty( $extra['group'] ) && is_int( $dep->args ) ) {
+				$extra['group'] = $dep->args;
+			}
 			ksort($extra);
 			$key = serialize($extra);
 			$bundles[$key][] = $handle;
