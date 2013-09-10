@@ -94,7 +94,9 @@ class Dependency_Minification {
 	/**
 	 * register_deactivation_hook
 	 */
-	static function deactivate() {}
+	static function deactivate() {
+		flush_rewrite_rules();
+	}
 
 	/**
 	 * @filter query_vars
