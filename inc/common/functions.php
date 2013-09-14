@@ -121,24 +121,24 @@ function depmin_is_disabled() {
 
         if ( is_null( $disabled ) ) {
 
-                /*** Disable on ugly permalinks ***************************************/
+                /*** Disable on ugly permalinks *******************************/
 
                 $disabled = empty( $GLOBALS['wp_rewrite']->permalink_structure );
 
 
-                /*** Disable flag *****************************************************/
+                /*** Disable flag *********************************************/
 
                 if ( ! $disabled && defined( 'DEPENDENCY_MINIFICATION_DEFAULT_DISABLED' ) )
                     $disabled = (bool) DEPENDENCY_MINIFICATION_DEFAULT_DISABLED;
 
 
-                /*** Disable on debug *************************************************/
+                /*** Disable on debug *****************************************/
 
                 if ( ! $disabled && depmin_get_option( 'disable_if_wp_debug' ) )
                         $disabled = ( defined( 'WP_DEBUG' ) && WP_DEBUG );
 
 
-                /*** Disable on conditions ********************************************/
+                /*** Disable on conditions ************************************/
 
                 if ( ! $disabled ) {
 
@@ -162,15 +162,8 @@ function depmin_is_disabled() {
 
                                    case 'queryvar':
 
-                                        if ( ! empty( $value['key'] ) && isset( $_GET[ $value['key'] ] ) ) {
-
-                                                if ( ! empty( $value['value'] ) ) {
-                                                    $disabled = ( $_GET[ $value['key'] ] == strval( $value['value'] ) );
-
-                                                } else {
-                                                     $disabled = true;
-                                                } // end if
-
+                                        if ( isset( $value['enabled'] ) && $value['enabled'] ) {
+                                            $disabled = ( ! empty( $value['key'] ) && isset( $_GET[ $value['key'] ] ) );
                                         } // end if
 
                                         break;

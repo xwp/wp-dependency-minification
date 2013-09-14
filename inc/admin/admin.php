@@ -41,14 +41,16 @@ function depmin_display_admin_page() {
     $nonce = wp_create_nonce( Dependency_Minification::AJAX_ACTION );
     ?>
     <div class="wrap">
-            <div class="icon32" id="icon-tools"><br></div>
+
+            <?php screen_icon( 'tools' ); ?>
             <h2><?php esc_html_e( 'Dependency Minification', 'depmin' ) ?></h2>
 
             <h2 class="nav-tab-wrapper">
                     <a href="#tab-status" class="nav-tab nav-tab-active"><?php esc_html_e( 'Status', 'depmin' ) ?></a>
                     <a href="#tab-settings" class="nav-tab"><?php esc_html_e( 'Settings', 'depmin' ) ?></a>
             </h2>
-            <div class="nav-tab-content" id="tab-content-status">
+
+            <div id="tab-content-status" class="nav-tab-content">
 
             <form action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ) ?>" method="post">
                     <input type="hidden" name="action" value="<?php echo esc_attr( Dependency_Minification::AJAX_ACTION ) ?>">
@@ -285,7 +287,7 @@ function depmin_display_admin_page() {
                                                             <label for="options[disabled_on_conditions][queryvar][enabled]">
                                                                     <input type="checkbox" name="options[disabled_on_conditions][queryvar][enabled]" id="options[disabled_on_conditions][queryvar][enabled]" <?php checked( $conditions['queryvar']['enabled'] ) ?> value="1">
                                                                     <?php esc_html_e( 'Query Variable', 'depmin' ) ?>
-                                                                    <input type="text" name="options[disabled_on_conditions][queryvar][value]" id="options[disabled_on_conditions][queryvar][value]" value="<?php echo esc_attr( $conditions['queryvar']['value'] ) ?>">
+                                                                    <input type="text" name="options[disabled_on_conditions][queryvar][key]" id="options[disabled_on_conditions][queryvar][key]" value="<?php echo esc_attr( $conditions['queryvar']['key'] ) ?>">
                                                             </label>
                                                     </td>
                                             </tr>
