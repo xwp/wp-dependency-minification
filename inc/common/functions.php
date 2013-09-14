@@ -3,7 +3,7 @@
 /*** Options API **************************************************************/
 
 /**
- * Get the options list.
+ * Get all the options list.
  *
  * @return array
  * @since X
