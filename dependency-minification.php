@@ -10,15 +10,15 @@ Text Domain: depmin
 
 class Dependency_Minification {
 
-        /*** Constants ********************************************************/
+	/*** Constants ********************************************************/
 
-        /**
-         * The plugin version constant.
-         *
-         * @since X
-         * @var float
-         */
-        const VERSION = '0.9.4';
+	/**
+	 * The plugin version constant.
+	 *
+	 * @since X
+	 * @var float
+	 */
+	const VERSION = '0.9.4';
 
 	const CRON_MINIFY_ACTION = 'minify_dependencies';
 	const CACHE_KEY_PREFIX   = 'depmin_cache_';
@@ -28,39 +28,39 @@ class Dependency_Minification {
 	const ADMIN_PAGE_SLUG    = 'dependency-minification';
 	const ADMIN_PARENT_PAGE  = 'tools.php';
 
-        // @deprecated...
+	// @deprecated...
 	const DEFAULT_ENDPOINT    = '_minify';
 
 
-        /*** Properties *******************************************************/
+	/*** Properties *******************************************************/
 
-        /**
-         * The plugin admin page hook_suffix.
-         *
-         * @var string
-         * @access public
-         */
+	/**
+	 * The plugin admin page hook_suffix.
+	 *
+	 * @var string
+	 * @access public
+	 */
 	public static $admin_page_hook;
 
-        /**
-         * The plugin run-time options list.
-         *
-         * @var array
-         * @access public
-         */
+	/**
+	 * The plugin run-time options list.
+	 *
+	 * @var array
+	 * @access public
+	 */
 	public static $options = array();
 
-        /**
-         * The plugin query vars keys.
-         *
-         * @var array
-         * @access public
-         */
+	/**
+	 * The plugin query vars keys.
+	 *
+	 * @var array
+	 * @access public
+	 */
 	public static $query_vars = array(
-                'depmin_handles',
-                'depmin_src_hash',
-                'depmin_ver_hash',
-                'depmin_file_ext',
+		'depmin_handles',
+		'depmin_src_hash',
+		'depmin_ver_hash',
+		'depmin_file_ext',
 	);
 
 	protected static $minified_count = 0;
@@ -71,50 +71,50 @@ class Dependency_Minification {
 	);
 
 
-        /*** Functions *******************************************************/
+	/*** Functions *******************************************************/
 
-        /**
-         * Define the plugin global constants.
-         *
-         * @return void
-         * @since X
-         */
-        public static function define_constants() {
+	/**
+	 * Define the plugin global constants.
+	 *
+	 * @return void
+	 * @since X
+	 */
+	public static function define_constants() {
 
-                // Define the plugin directory path constant.
-                define( 'DEPMIN_DIR', plugin_dir_path( __FILE__ ) );
+		// Define the plugin directory path constant.
+		define( 'DEPMIN_DIR', plugin_dir_path( __FILE__ ) );
 
-                // Define the plugin directory URL constant.
-                define( 'DEPMIN_URL', plugin_dir_url( __FILE__ ) );
+		// Define the plugin directory URL constant.
+		define( 'DEPMIN_URL', plugin_dir_url( __FILE__ ) );
 
-        } // end define_constants()
+	} // end define_constants()
 
-        /**
-         * Load the plugin components files.
-         *
-         * @return void
-         * @since X
-         */
-        public static function load_components() {
+	/**
+	 * Load the plugin components files.
+	 *
+	 * @return void
+	 * @since X
+	 */
+	public static function load_components() {
 
-                require DEPMIN_DIR . '/inc/common/functions.php';
+		require DEPMIN_DIR . '/inc/common/functions.php';
 
-                if ( is_admin() )
-                    require DEPMIN_DIR . '/inc/admin/admin.php';
+		if ( is_admin() )
+			require DEPMIN_DIR . '/inc/admin/admin.php';
 
-        } // end load_functions()
+	} // end load_functions()
 
-        /**
-         * Load the plugin files and setup the needed hooks.
-         *
-         * @return void
-         * @since X
-         */
+	/**
+	 * Load the plugin files and setup the needed hooks.
+	 *
+	 * @return void
+	 * @since X
+	 */
 	public static function setup() {
 
-                // Load the plugin!
-                self::define_constants();
-                self::load_components();
+		// Load the plugin!
+		self::define_constants();
+		self::load_components();
 
 		add_action( 'init', array( __CLASS__, 'hook_rewrites' ) );
 		add_action( self::CRON_MINIFY_ACTION, array( __CLASS__, 'minify' ), 10, 4 );
@@ -226,7 +226,7 @@ class Dependency_Minification {
 		 * because it is intended to only be used in the WP Admin
 		 * Plugin is automatically disabled if pretty permalinks is not activated
 		 */
-                $disabled = depmin_is_disabled();
+		$disabled = depmin_is_disabled();
 		$disabled = apply_filters( 'dependency_minification_disabled', $disabled, $handles, $type );
 		$disabled = apply_filters( "dependency_minification_disabled_{$type}", $disabled, $handles );
 		if ( $disabled ) {
@@ -357,8 +357,8 @@ class Dependency_Minification {
 				}
 				$wp_deps->set_group( $new_handle, /*recursive*/false, $current_group );
 
-                                // We may have multiple scripts in a group adding extra data, must track and append
-                                if ( !isset( $concatenate_scripts[$new_handle] ) ) $concatenated_data[$new_handle] = '';
+				// We may have multiple scripts in a group adding extra data, must track and append
+				if ( !isset( $concatenate_scripts[$new_handle] ) ) $concatenated_data[$new_handle] = '';
 
 				foreach ( $group['handles'] as $handle ) {
 
@@ -473,10 +473,10 @@ class Dependency_Minification {
 	 *
 	 */
 	static function minify( $cached ) {
-                extract( $cached );
-                $ver_hash = self::hash_array( wp_list_pluck( $deps, 'ver' ) );
-                $src_hash = self::hash_array( wp_list_pluck( $deps, 'src' ) );
-                $cache_option_name = self::get_cache_option_name( $src_hash );
+		extract( $cached );
+		$ver_hash = self::hash_array( wp_list_pluck( $deps, 'ver' ) );
+		$src_hash = self::hash_array( wp_list_pluck( $deps, 'src' ) );
+		$cache_option_name = self::get_cache_option_name( $src_hash );
 
 		try {
 			$is_css = ( 'styles' === $type );
@@ -494,19 +494,19 @@ class Dependency_Minification {
 			$contents_for_each_dep = array();
 			foreach ( $srcs as $src ) {
 
-                                if ( ! preg_match( '|^(https?:)?//|', $src ) )
-                                        $src = site_url( $src );
+				if ( ! preg_match( '|^(https?:)?//|', $src ) )
+					$src = site_url( $src );
 
-                                // Get the script absolute path.
-                                $abspath = depmin_get_src_abspath( $src );
+				// Get the script absolute path.
+				$abspath = depmin_get_src_abspath( $src );
 
-                                // Get the script file contents.
+				// Get the script file contents.
 				$contents = depmin_get_src_contents( $src, $abspath );
 
 				// Rewrite relative paths in CSS
-                                if ( 'styles' === $type && ! empty( $abspath ) ) {
-                                        $contents = Minify_CSS_UriRewriter::rewrite( $contents, dirname( $abspath ) );
-                                }
+				if ( 'styles' === $type && ! empty( $abspath ) ) {
+					$contents = Minify_CSS_UriRewriter::rewrite( $contents, dirname( $abspath ) );
+				}
 
 				$contents_for_each_dep[$src] = $contents;
 				$unminified_size += strlen( $contents );
@@ -531,23 +531,23 @@ class Dependency_Minification {
 			// to pass the anonymous function into a function {a:1} which
 			// is of course an object and not a function. Culprit here
 			// is the comment-reply.js in WordPress.
-                        switch( $type ) {
+			switch( $type ) {
 
-                            case 'scripts':
+			    case 'scripts':
 				$minified_contents = implode( "\n;;\n", $contents_for_each_dep );
 				$minified_contents = JSMin::minify( $minified_contents );
 
 				if ( false === $minified_contents ) {
 					throw new Dependency_Minification_Exception( 'JavaScript parse error' );
 				}
-                                break;
+				break;
 
-                            case 'styles':
+			    case 'styles':
 				$minified_contents = implode( "\n\n", $contents_for_each_dep );
 				$minified_contents = Minify_CSS_Compressor::process($minified_contents);
-                                break;
+				break;
 
-                        }
+			}
 
 			$contents .= $minified_contents;
 			$cached['unminified_size'] = $unminified_size;
@@ -662,8 +662,8 @@ class Dependency_Minification {
 				print $out; // xss ok
 			}
 			ob_end_flush();
-		}
-		catch(Exception $e) {
+			
+		} catch(Exception $e) {
 			ob_end_clean();
 			$status = null;
 			$message = '';

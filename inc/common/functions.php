@@ -10,29 +10,29 @@
  */
 function depmin_get_options() {
 
-        // A shortcut for the class name :)
-        $depmin = 'Dependency_Minification';
+	// A shortcut for the class name :)
+	$depmin = 'Dependency_Minification';
 
-        if ( empty( $depmin::$options ) ) {
+	if ( empty( $depmin::$options ) ) {
 
-                $depmin::$options = apply_filters( 'depmin_options_defaults', array(
-                        'endpoint'                            => '_minify',
-                        'default_exclude_remote_dependencies' => true,
-                        'cache_control_max_age_cache'         => 2629743, // 1 month in seconds
-                        'cache_control_max_age_error'         => 60 * 60, // 1 hour, to try minifying again
-                        'allow_not_modified_responses'        => true, // only needs to be true if not Akamaized and max-age is short
-                        'admin_page_capability'               => 'edit_theme_options',
-                        'show_error_messages'                 => ( defined( 'WP_DEBUG' ) && WP_DEBUG ),
-                        'disable_if_wp_debug'                 => true,
-                        'exclude_dependencies'                => '',
-                        'disabled_on_conditions'              => array(),
-                ) );
+		$depmin::$options = apply_filters( 'depmin_options_defaults', array(
+			'endpoint'                            => '_minify',
+			'default_exclude_remote_dependencies' => true,
+			'cache_control_max_age_cache'         => 2629743, // 1 month in seconds
+			'cache_control_max_age_error'         => 60 * 60, // 1 hour, to try minifying again
+			'allow_not_modified_responses'        => true, // only needs to be true if not Akamaized and max-age is short
+			'admin_page_capability'               => 'edit_theme_options',
+			'show_error_messages'                 => ( defined( 'WP_DEBUG' ) && WP_DEBUG ),
+			'disable_if_wp_debug'                 => true,
+			'exclude_dependencies'                => '',
+			'disabled_on_conditions'              => array(),
+		) );
 
-                $depmin::$options = array_merge( $depmin::$options, get_option( 'depmin_options', array() ) );
+		$depmin::$options = array_merge( $depmin::$options, get_option( 'depmin_options', array() ) );
 
-        } // end if
+	} // end if
 
-        return apply_filters( 'dependency_minification_options', (array) $depmin::$options );
+	return apply_filters( 'dependency_minification_options', (array) $depmin::$options );
 
 } // end depmin_get_options()
 
@@ -44,12 +44,12 @@ function depmin_get_options() {
  */
 function depmin_update_options( $options ) {
 
-        if ( ! update_option( 'depmin_options', $options ) )
-            return false;
+	if ( ! update_option( 'depmin_options', $options ) )
+	    return false;
 
-        Dependency_Minification::$options = $options;
+	Dependency_Minification::$options = $options;
 
-        return true;
+	return true;
 
 } // end depmin_update_options()
 
@@ -61,12 +61,12 @@ function depmin_update_options( $options ) {
  */
 function depmin_delete_options() {
 
-        if ( ! delete_option( 'depmin_options' ) )
-            return false;
+	if ( ! delete_option( 'depmin_options' ) )
+	    return false;
 
-        Dependency_Minification::$options = array();
+	Dependency_Minification::$options = array();
 
-        return true;
+	return true;
 
 } // end depmin_delete_options()
 
@@ -78,12 +78,12 @@ function depmin_delete_options() {
  */
 function depmin_get_option( $option ) {
 
-        $options = depmin_get_options();
+	$options = depmin_get_options();
 
-        if ( ! isset( $options[ $option ] ) )
-            return;
+	if ( ! isset( $options[ $option ] ) )
+	    return;
 
-        return $options[ $option ];
+	return $options[ $option ];
 
 } // end depmin_get_option()
 
@@ -98,14 +98,14 @@ function depmin_get_option( $option ) {
  */
 function depmin_is_frontend() {
 
-        global $pagenow;
+	global $pagenow;
 
-        $is_frontend = ! is_admin();
+	$is_frontend = ! is_admin();
 
-        if ( $is_frontend )
-            $is_frontend = ! in_array( $pagenow, array( 'wp-login.php', 'wp-register.php' ) );
+	if ( $is_frontend )
+	    $is_frontend = ! in_array( $pagenow, array( 'wp-login.php', 'wp-register.php' ) );
 
-        return apply_filters( 'depmin_is_frontend', $is_frontend );
+	return apply_filters( 'depmin_is_frontend', $is_frontend );
 
 } // end depmin_is_frontend()
 
@@ -117,69 +117,68 @@ function depmin_is_frontend() {
  */
 function depmin_is_disabled() {
 
-        static $disabled = null;
+	static $disabled = null;
 
-        if ( is_null( $disabled ) ) {
+	if ( is_null( $disabled ) ) {
 
-                /*** Disable on ugly permalinks *******************************/
+		/*** Disable on ugly permalinks *******************************/
 
-                $disabled = empty( $GLOBALS['wp_rewrite']->permalink_structure );
-
-
-                /*** Disable flag *********************************************/
-
-                if ( ! $disabled && defined( 'DEPENDENCY_MINIFICATION_DEFAULT_DISABLED' ) )
-                    $disabled = (bool) DEPENDENCY_MINIFICATION_DEFAULT_DISABLED;
+		$disabled = empty( $GLOBALS['wp_rewrite']->permalink_structure );
 
 
-                /*** Disable on debug *****************************************/
+		/*** Disable flag *********************************************/
 
-                if ( ! $disabled && depmin_get_option( 'disable_if_wp_debug' ) )
-                        $disabled = ( defined( 'WP_DEBUG' ) && WP_DEBUG );
+		if ( ! $disabled && defined( 'DEPENDENCY_MINIFICATION_DEFAULT_DISABLED' ) )
+		    $disabled = (bool) DEPENDENCY_MINIFICATION_DEFAULT_DISABLED;
 
 
-                /*** Disable on conditions ************************************/
+		/*** Disable on debug *****************************************/
 
-                if ( ! $disabled ) {
+		if ( ! $disabled && depmin_get_option( 'disable_if_wp_debug' ) )
+			$disabled = ( defined( 'WP_DEBUG' ) && WP_DEBUG );
 
-                        foreach( (array) depmin_get_option( 'disabled_on_conditions' ) as $key => $value ) {
 
-                                switch( $key ) {
+		/*** Disable on conditions ************************************/
 
-                                    case 'all':
-                                        $disabled = ! empty( $value );
-                                        break;
+		if ( ! $disabled ) {
 
-                                    case 'admin':
-                                    case 'loggedin':
+			foreach( (array) depmin_get_option( 'disabled_on_conditions' ) as $key => $value ) {
 
-                                        $disabled = is_user_logged_in();
+				switch( $key ) {
 
-                                        if ( 'admin' === $key && current_user_can( 'manage_options' ) )
-                                                $disabled = true;
+					case 'all':
+						$disabled = ! empty( $value );
+						break;
 
-                                        break;
+					case 'admin':
+					case 'loggedin':
 
-                                   case 'queryvar':
+						$disabled = is_user_logged_in();
 
-                                        if ( isset( $value['enabled'] ) && $value['enabled'] ) {
-                                            $disabled = ( ! empty( $value['key'] ) && isset( $_GET[ $value['key'] ] ) );
-                                        } // end if
+						if ( 'admin' === $key && current_user_can( 'manage_options' ) )
+							$disabled = true;
 
-                                        break;
+						break;
 
-                                } // end switch
+					case 'queryvar':
 
-                                if ( $disabled )
-                                    break;
+						if ( isset( $value['enabled'] ) && $value['enabled'] )
+							$disabled = ( ! empty( $value['key'] ) && isset( $_GET[ $value['key'] ] ) );
 
-                        } // end foreach
+						break;
 
-                } // end if
+				} // end switch
 
-        } // end if
+				if ( $disabled )
+					break;
 
-        return apply_filters( 'depmin_is_disabled', $disabled );
+			} // end foreach
+
+		} // end if
+
+	} // end if
+
+	return apply_filters( 'depmin_is_disabled', $disabled );
 
 } // end depmin_is_disabled()
 
@@ -192,20 +191,20 @@ function depmin_is_disabled() {
  */
 function depmin_get_src_abspath( $src ) {
 
-        $path = false;
+	$path = false;
 
-        if ( ! empty( $src ) && depmin_is_self_hosted_src( $src ) ) {
+	if ( ! empty( $src ) && depmin_is_self_hosted_src( $src ) ) {
 
-            // Parse the URL and return the possible path.
-            $path = ltrim( parse_url( $src, PHP_URL_PATH ), '/' );
-            $path = path_join( $_SERVER['DOCUMENT_ROOT'], $path );
+		// Parse the URL and return the possible path.
+		$path = ltrim( parse_url( $src, PHP_URL_PATH ), '/' );
+		$path = path_join( $_SERVER['DOCUMENT_ROOT'], $path );
 
-            if ( ! file_exists( $path ) )
-                $path = false;
+		if ( ! file_exists( $path ) )
+			$path = false;
 
-        } // end if
+	} // end if
 
-        return apply_filters( 'depmin_get_src_abspath', $path, $src );
+	return apply_filters( 'depmin_get_src_abspath', $path, $src );
 
 } // end depmin_get_src_abspath()
 
@@ -218,26 +217,26 @@ function depmin_get_src_abspath( $src ) {
  */
 function depmin_is_self_hosted_src( $src ) {
 
-        $self_hosted = false;
-        $parsed_url = parse_url( $src );
+	$self_hosted = false;
+	$parsed_url = parse_url( $src );
 
-        if ( is_array( $parsed_url ) ) {
+	if ( is_array( $parsed_url ) ) {
 
-                if ( empty( $parsed_url['host'] ) ) {
+		if ( empty( $parsed_url['host'] ) ) {
 
-                        if ( substr( $parsed_url['path'], 0, 1) === '/' )
-                                $self_hosted = true;
+			if ( substr( $parsed_url['path'], 0, 1) === '/' )
+				$self_hosted = true;
 
-                } else {
+		} else {
 
-                        if ( $parsed_url['host'] === parse_url( get_home_url(), PHP_URL_HOST ) )
-                                $self_hosted = true;
+			if ( $parsed_url['host'] === parse_url( get_home_url(), PHP_URL_HOST ) )
+				$self_hosted = true;
 
-                } // end if
+		} // end if
 
-        } // end if
+	} // end if
 
-        return apply_filters( 'depmin_is_self_hosted_src', $self_hosted, $src );
+	return apply_filters( 'depmin_is_self_hosted_src', $self_hosted, $src );
 
 } // end depmin_is_self_hosted_src()
 
@@ -251,35 +250,35 @@ function depmin_is_self_hosted_src( $src ) {
  */
 function depmin_get_src_contents( $src, $abspath = '' ) {
 
-        $contents = false;
+	$contents = false;
 
-        if ( empty( $abspath ) )
-                $abspath = depmin_get_src_abspath( $src );
+	if ( empty( $abspath ) )
+		$abspath = depmin_get_src_abspath( $src );
 
-        // First attempt to get the file from the filesystem
-        if ( ! empty( $abspath ) )
-                $contents = file_get_contents( $abspath, false );
+	// First attempt to get the file from the filesystem
+	if ( ! empty( $abspath ) )
+		$contents = file_get_contents( $abspath, false );
 
-        // Dependency is not self-hosted or it the filesystem read failed, so do HTTP request
-        if ( false === $contents ) {
+	// Dependency is not self-hosted or it the filesystem read failed, so do HTTP request
+	if ( false === $contents ) {
 
-                $r = wp_remote_get( $src );
+		$r = wp_remote_get( $src );
 
-                if ( is_wp_error( $r ) ) {
-                        throw new Exception( "Failed to retrieve {$src} : " . $r->get_error_message());
+		if ( is_wp_error( $r ) ) {
+			throw new Exception( "Failed to retrieve {$src} : " . $r->get_error_message());
 
-                } elseif ( intval( wp_remote_retrieve_response_code( $r ) ) !== 200 ) {
-                        throw new Dependency_Minification_Exception( sprintf( 'Request for %s returned with HTTP %d %s', $src, wp_remote_retrieve_response_code( $r ), wp_remote_retrieve_response_message( $r ) ) );
-                }
+		} elseif ( intval( wp_remote_retrieve_response_code( $r ) ) !== 200 ) {
+			throw new Dependency_Minification_Exception( sprintf( 'Request for %s returned with HTTP %d %s', $src, wp_remote_retrieve_response_code( $r ), wp_remote_retrieve_response_message( $r ) ) );
+		}
 
-                $contents = wp_remote_retrieve_body( $r );
+		$contents = wp_remote_retrieve_body( $r );
 
-        }
+	}
 
-        // Remove the BOM.
-        $contents = preg_replace( "/^\xEF\xBB\xBF/", '', $contents );
+	// Remove the BOM.
+	$contents = preg_replace( "/^\xEF\xBB\xBF/", '', $contents );
 
-        return $contents;
+	return $contents;
 
 } // end depmin_get_src_contents()
 
@@ -291,14 +290,14 @@ function depmin_get_src_contents( $src, $abspath = '' ) {
  */
 function depmin_is_url_included( $needle, $haystack ) {
 
-        foreach ( (array) $haystack as $entry ) {
+	foreach ( (array) $haystack as $entry ) {
 
-            if ( ! empty( $entry ) && strpos( $needle, $entry ) !== false ) {
-                return true;
-            }
+		if ( ! empty( $entry ) && strpos( $needle, $entry ) !== false ) {
+			return true;
+		}
 
-        }
+	}
 
-        return false;
+	return false;
 
 } // end depmin_is_url_included()
