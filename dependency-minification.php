@@ -533,19 +533,19 @@ class Dependency_Minification {
 			// is the comment-reply.js in WordPress.
 			switch( $type ) {
 
-			    case 'scripts':
-				$minified_contents = implode( "\n;;\n", $contents_for_each_dep );
-				$minified_contents = JSMin::minify( $minified_contents );
+				case 'scripts':
+				    $minified_contents = implode( "\n;;\n", $contents_for_each_dep );
+				    $minified_contents = JSMin::minify( $minified_contents );
 
-				if ( false === $minified_contents ) {
-					throw new Dependency_Minification_Exception( 'JavaScript parse error' );
-				}
-				break;
+				    if ( false === $minified_contents ) {
+					    throw new Dependency_Minification_Exception( 'JavaScript parse error' );
+				    }
+				    break;
 
-			    case 'styles':
-				$minified_contents = implode( "\n\n", $contents_for_each_dep );
-				$minified_contents = Minify_CSS_Compressor::process($minified_contents);
-				break;
+				case 'styles':
+				    $minified_contents = implode( "\n\n", $contents_for_each_dep );
+				    $minified_contents = Minify_CSS_Compressor::process($minified_contents);
+				    break;
 
 			}
 
