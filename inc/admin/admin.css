@@ -1,0 +1,42 @@
+.fixed .column-count,
+.fixed .column-type {
+	width: 10%;
+}
+
+.fixed .column-compression {
+	width: 15%;
+}
+.column-compression meter {
+	width: 100%;
+}
+
+.fixed .column-last-modified,
+.fixed .column-expires {
+	width: 12%;
+}
+
+.nav-tab-content {
+	display: none;
+}
+.form-table th small {
+	display: block;
+	clear: both;
+	color: #999;
+}
+.form-table td label {
+	display: block;
+	clear:both;
+}
+
+.nav-tab-content {
+	display: none;
+}
+.form-table th small {
+	display: block;
+	clear: both;
+	color: #999;
+}
+.form-table td label {
+	display: block;
+	clear:both;
+}
