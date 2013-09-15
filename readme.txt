@@ -1,7 +1,7 @@
 === Dependency Minification ===
 Contributors:      X-team, westonruter, fjarrett, c3mdigital
 Tags:              performance, dependencies, minify, concatenate, compress, js, javascript, scripts, css, styles, stylesheets, gzip, yslow, pagespeed, caching
-Tested up to:      3.6
+Tested up to:      3.6.1
 Requires at least: 3.5
 Stable tag:        trunk
 License:           GPLv2 or later
@@ -53,6 +53,9 @@ If you are using Nginx with the default Varying Vagrant Vagrants config, you'll 
 
 
 == Changelog ==
+
+= 0.9.5 =
+Fix wp_localize_script data lost in minification ([#28](https://github.com/x-team/wp-dependency-minification/issues/28)). Props [lkraav](http://profiles.wordpress.org/lkraav/).
 
 = 0.9.4 =
 Issue warning if pretty permalinks are not enabled ([#16](https://github.com/x-team/wp-dependency-minification/issues/16)). Props [shadyvb](http://profiles.wordpress.org/shadyvb/).

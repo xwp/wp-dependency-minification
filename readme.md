@@ -6,7 +6,7 @@ Automatically concatenates and minifies any scripts and stylesheets enqueued usi
 **Contributors:** [x-team](http://profiles.wordpress.org/x-team), [westonruter](http://profiles.wordpress.org/westonruter), [fjarrett](http://profiles.wordpress.org/fjarrett), [c3mdigital](http://profiles.wordpress.org/c3mdigital)  
 **Tags:** [performance](http://wordpress.org/plugins/tags/performance), [dependencies](http://wordpress.org/plugins/tags/dependencies), [minify](http://wordpress.org/plugins/tags/minify), [concatenate](http://wordpress.org/plugins/tags/concatenate), [compress](http://wordpress.org/plugins/tags/compress), [js](http://wordpress.org/plugins/tags/js), [javascript](http://wordpress.org/plugins/tags/javascript), [scripts](http://wordpress.org/plugins/tags/scripts), [css](http://wordpress.org/plugins/tags/css), [styles](http://wordpress.org/plugins/tags/styles), [stylesheets](http://wordpress.org/plugins/tags/stylesheets), [gzip](http://wordpress.org/plugins/tags/gzip), [yslow](http://wordpress.org/plugins/tags/yslow), [pagespeed](http://wordpress.org/plugins/tags/pagespeed), [caching](http://wordpress.org/plugins/tags/caching)  
 **Requires at least:** 3.5  
-**Tested up to:** 3.6  
+**Tested up to:** 3.6.1  
 **Stable tag:** trunk (master)  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
 
@@ -53,6 +53,9 @@ If you are using Nginx with the default Varying Vagrant Vagrants config, you'll 
     }
 
 ## Changelog ##
+
+### 0.9.5 ###
+Fix wp_localize_script data lost in minification ([#28](https://github.com/x-team/wp-dependency-minification/issues/28)). Props [lkraav](http://profiles.wordpress.org/lkraav/).
 
 ### 0.9.4 ###
 Issue warning if pretty permalinks are not enabled ([#16](https://github.com/x-team/wp-dependency-minification/issues/16)). Props [shadyvb](http://profiles.wordpress.org/shadyvb/).
