@@ -154,7 +154,7 @@ class Dependency_Minification {
 			?>
 			<div class="error">
 				<p><?php
-				echo sprintf( 
+				echo sprintf(
 					'<strong>%1$s</strong>: %2$s',
 					__( 'Dependency Minification', 'depmin' ),
 					sprintf(
@@ -633,36 +633,38 @@ class Dependency_Minification {
 					wp_register_style( $new_handle, $src, array(), null, $extra['media'] );
 				}
 				$wp_deps->set_group( $new_handle, /*recursive*/false, $current_group );
-
-				// We may have multiple scripts in a group adding extra data, must track and append
-				if ( !isset( $concatenate_scripts[$new_handle] ) ) $concatenated_data[$new_handle] = '';
-
+				$new_dep = $wp_deps->registered[$new_handle];
+				$new_extra = array(
+					'data' => '',
+				);
 				foreach ( $group['handles'] as $handle ) {
 
 					// Aggregate data from scripts (e.g. wp_localize_script)
-					if ( !empty( $wp_deps->registered[$handle]->extra ) ) {
-						$dep = $wp_deps->registered[$new_handle];
-						$data = array();
-						foreach ( $wp_deps->registered[$handle]->extra as $key => $value ) {
-							$data[ $handle ] = $wp_deps->get_data( $handle, $key );
-						}
-						if ( 'data' === $key ) {
-							foreach ( $data as $data_handle => $data_value ) {
-								$concatenated_data[$new_handle] .= "/* wp_localize_script($data_handle): */\n";
-								$concatenated_data[$new_handle] .= "$data_value\n\n";
+					if ( ! empty( $wp_deps->registered[$handle]->extra ) ) {
+
+						foreach ( array_keys( $wp_deps->registered[$handle]->extra ) as $extra_key ) {
+							$data = $wp_deps->get_data( $handle, $extra_key );
+
+							if ( 'data' === $extra_key ) {
+								$new_extra['data'] .= "/* wp_localize_script($handle): */\n";
+								$new_extra['data'] .= "$data\n\n";
+							} else {
+								if ( isset( $new_extra[$extra_key] ) ) {
+									// The handles should have been grouped so that they have the same extras
+									assert( $new_extra[$extra_key] === $data );
+								}
+								$new_extra[$extra_key] = $data;
 							}
-							$data = $concatenated_data[$new_handle];
-						} else {
-							for ( $i = 1; $i < count($data); $i += 1 ) {
-								assert( $data[0] === $data[$i] );
-							}
-							$data = array_shift( $data );
 						}
-						$dep->add_data( $key, $data );
 					}
 
 					// Mark the handles as done for the resources that have been minified
 					$wp_deps->done[] = $handle;
+				}
+
+				// Add aggregated extra to new dependency
+				foreach ( $new_extra as $key => $value ) {
+					$new_dep->add_data( $key, $value );
 				}
 			}
 		}
