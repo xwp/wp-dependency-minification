@@ -81,6 +81,12 @@ class Dependency_Minification {
 		add_rewrite_rule( $regex, $redirect, 'top' );
 	}
 
+	static function remove_rewrite_rule() {
+		$regex = self::get_rewrite_regex();
+		global $wp_rewrite;
+		unset( $wp_rewrite->extra_rules_top[ $regex ] );
+	}
+
 	protected static $is_footer = array(
 		'scripts' => false,
 		'styles'  => false,
@@ -99,6 +105,7 @@ class Dependency_Minification {
 	 * register_deactivation_hook
 	 */
 	static function deactivate() {
+		self::remove_rewrite_rule();
 		flush_rewrite_rules();
 	}
 
