@@ -68,8 +68,12 @@ class Dependency_Minification {
 		self::add_rewrite_rule();
 	}
 
+	static function get_rewrite_regex() {
+		return sprintf( '^%s/%s', self::$options['endpoint'], self::FILENAME_PATTERN );
+	}
+
 	static function add_rewrite_rule() {
-		$regex = sprintf( '^%s/%s', self::$options['endpoint'], self::FILENAME_PATTERN );
+		$regex    = self::get_rewrite_regex();
 		$redirect = 'index.php?';
 		for ( $i = 0; $i < count( self::$query_vars ); $i += 1 ) {
 			$redirect .= sprintf( '%s=$matches[%d]&', self::$query_vars[$i], $i + 1 );
