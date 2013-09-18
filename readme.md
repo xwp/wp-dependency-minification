@@ -3,7 +3,7 @@
 
 Automatically concatenates and minifies any scripts and stylesheets enqueued using the standard dependency system.
 
-**Contributors:** [x-team](http://profiles.wordpress.org/x-team), [westonruter](http://profiles.wordpress.org/westonruter), [fjarrett](http://profiles.wordpress.org/fjarrett), [c3mdigital](http://profiles.wordpress.org/c3mdigital)  
+**Contributors:** [x-team](http://profiles.wordpress.org/x-team), [westonruter](http://profiles.wordpress.org/westonruter), [fjarrett](http://profiles.wordpress.org/fjarrett), [kucrut](http://profiles.wordpress.org/kucrut), [shadyvb](http://profiles.wordpress.org/shadyvb), [c3mdigital](http://profiles.wordpress.org/c3mdigital), [lkraav](http://profiles.wordpress.org/lkraav)  
 **Tags:** [performance](http://wordpress.org/plugins/tags/performance), [dependencies](http://wordpress.org/plugins/tags/dependencies), [minify](http://wordpress.org/plugins/tags/minify), [concatenate](http://wordpress.org/plugins/tags/concatenate), [compress](http://wordpress.org/plugins/tags/compress), [js](http://wordpress.org/plugins/tags/js), [javascript](http://wordpress.org/plugins/tags/javascript), [scripts](http://wordpress.org/plugins/tags/scripts), [css](http://wordpress.org/plugins/tags/css), [styles](http://wordpress.org/plugins/tags/styles), [stylesheets](http://wordpress.org/plugins/tags/stylesheets), [gzip](http://wordpress.org/plugins/tags/gzip), [yslow](http://wordpress.org/plugins/tags/yslow), [pagespeed](http://wordpress.org/plugins/tags/pagespeed), [caching](http://wordpress.org/plugins/tags/caching)  
 **Requires at least:** 3.5  
 **Tested up to:** 3.6.1  
@@ -20,7 +20,7 @@ to prevent race conditions and to ensure that the minification process does not 
 This is a reincarnation and rewrite of the [Optimize Scripts](http://wordpress.org/plugins/optimize-scripts/) plugin,
 which this plugin now supersedes.
 
-Features:
+**Features:**
 
  * Minified sources are stored in the WP Options table so no special filesystem access is required.
  * Endpoint for minified requests is at `/_minified`, which can be configured.
@@ -39,9 +39,7 @@ Features:
  * Can serve compressed responses with `gzip` or `deflate`.
  * Transforms relatives paths in stylesheets (e.g. background-images) to absolute ones, so that they don't 404.
 
-Development of plugin is done on GitHub: [https://github.com/x-team/wp-dependency-minification](https://github.com/x-team/wp-dependency-minification)
-
-Pull requests welcome.
+**Development of this plugin is done [on GitHub](https://github.com/x-team/wp-dependency-minification). Pull requests welcome. Please see [issues](https://github.com/x-team/wp-dependency-minification/issues) reported there before going to the plugin forum.**
 
 If you are using Nginx with the default Varying Vagrant Vagrants config, you'll want to remove `css|js` from this rule in `nginx-wp-common.conf` (or remove the rule altogether):
 
@@ -53,6 +51,9 @@ If you are using Nginx with the default Varying Vagrant Vagrants config, you'll 
     }
 
 ## Changelog ##
+
+### 0.9.6 ###
+Fix wp_localize_script data lost in minification ([#37](https://github.com/x-team/wp-dependency-minification/pull/37)). Props [kucrut](http://profiles.wordpress.org/kucrut/).
 
 ### 0.9.5 ###
 Fix wp_localize_script data lost in minification ([#28](https://github.com/x-team/wp-dependency-minification/issues/28)). Props [lkraav](http://profiles.wordpress.org/lkraav/).
