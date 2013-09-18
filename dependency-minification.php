@@ -60,7 +60,6 @@ class Dependency_Minification {
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue_scripts' ) );
 		add_action( 'wp_ajax_' . self::AJAX_ACTION, array( __CLASS__, 'admin_ajax_handler' ) );
 		add_filter( 'plugin_action_links', array( __CLASS__, 'admin_plugin_action_links' ), 10, 2 );
-		add_filter( 'network_admin_plugin_action_links', array( __CLASS__, 'network_admin_plugin_action_links' ), 10, 2 );
 	}
 
 	static function hook_rewrites() {
@@ -260,45 +259,6 @@ class Dependency_Minification {
 			$admin_page_link = sprintf( '<a href="%s">%s</a>', esc_url( $admin_page_url ), esc_html__( 'Settings', 'depmin' ) );
 			array_push( $links, $admin_page_link );
 		}
-		return $links;
-	}
-
-	/**
-	 * Modify network activation link on plugin list table
-	 *
-	 * Because we need to call {@link flush_rewrite_rules()} upon plugin
-	 * de|activation and {@link register_activation_hook()} doesn't work for
-	 * network-activated plugins, we should require users to install and
-	 * activate Scribu's Proper Network Activation plugin before
-	 * network-activating Dependency Minification.
-	 *
-	 * @link http://wordpress.org/plugins/proper-network-activation/ Proper Network Activation plugin
-	 * @filter network_admin_plugin_action_links
-	 */
-	static function network_admin_plugin_action_links( $links, $file ) {
-		if ( ! current_user_can( 'manage_network_plugins' ) )
-			return $links;
-
-		if ( plugin_basename( __FILE__ ) !== $file )
-			return $links;
-
-		if ( is_plugin_active_for_network( $file ) )
-			return $links;
-
-		$pna_plugin_file = 'proper-network-activation/proper-network-activation.php';
-		if ( is_plugin_active_for_network( $pna_plugin_file ) )
-			return $links;
-
-		$all_plugins = apply_filters( 'all_plugins', get_plugins() );
-		if ( !isset($all_plugins[ $pna_plugin_file] ) ) {
-			$install_url       = wp_nonce_url( self_admin_url('update.php?action=install-plugin&plugin=proper-network-activation'), 'install-plugin_proper-network-activation' );
-			$links['activate'] = '<a href="' . $install_url . '" title="' . esc_attr__('Install Proper Network Activation plugin') . '" class="edit">' . __('Install PNA') . '</a>';
-		}
-		else {
-			$activate_pna_url  = wp_nonce_url( 'plugins.php?action=activate&amp;plugin=' . $pna_plugin_file, 'activate-plugin_' . $pna_plugin_file );
-			$links['activate'] = '<a href="' . $activate_pna_url . '" title="' . esc_attr__('Activate Proper Network Activation plugin') . '" class="edit">' . __('Activate PNA') . '</a>';
-		}
-
 		return $links;
 	}
 
