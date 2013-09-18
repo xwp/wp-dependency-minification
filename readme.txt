@@ -53,7 +53,7 @@ If you are using Nginx with the default Varying Vagrant Vagrants config, you'll 
 == Changelog ==
 
 = 0.9.6 =
-Fix wp_localize_script data lost in minification ([#37](https://github.com/x-team/wp-dependency-minification/pull/37)). Props [kucrut](http://profiles.wordpress.org/kucrut/).
+Improve network activation and deactivation ([#37](https://github.com/x-team/wp-dependency-minification/pull/37)). Props [kucrut](http://profiles.wordpress.org/kucrut/).
 
 = 0.9.5 =
 Fix wp_localize_script data lost in minification ([#28](https://github.com/x-team/wp-dependency-minification/issues/28)). Props [lkraav](http://profiles.wordpress.org/lkraav/).
