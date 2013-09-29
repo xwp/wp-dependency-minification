@@ -826,7 +826,7 @@ class Dependency_Minification {
 			$contents_for_each_dep = array();
 			foreach ( $srcs as $src ) {
 
-				if ( ! preg_match( '|^(https?:)?//|', $src ) ) 
+				if ( ! preg_match( '|^(https?:)?//|', $src ) ) {
 					$src = site_url( $src ); 
 				}
 
