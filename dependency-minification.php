@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Dependency Minification
  * Description: Concatenates and minifies scripts and stylesheets. Please install and activate <a href="http://scribu.net" target="_blank">scribu</a>'s <a href="http://wordpress.org/plugins/proper-network-activation/" target="_blank">Proper Network Activation</a> plugin <em>before</em> activating this plugin <em>network-wide</em>.
- * Version: 0.9.6
+ * Version: 0.9.7
  * Author: X-Team
  * Author URI: http://x-team.com/wordpress/
  * Text Domain: depmin
@@ -825,16 +825,17 @@ class Dependency_Minification {
 			// Get the contents of each script
 			$contents_for_each_dep = array();
 			foreach ( $srcs as $src ) {
-				$has_host = (bool) parse_url( $src, PHP_URL_HOST );
-				if ( ! $has_host ) {
-					$src = 'http://' . $host_domain . $src;
+
+				if ( ! preg_match( '|^(https?:)?//|', $src ) ) {
+					$src = site_url( $src ); 
 				}
 
 				// First attempt to get the file from the filesystem
 				$contents = false;
 				$is_self_hosted = self::is_self_hosted_src( $src );
 				if ( $is_self_hosted ) {
-					$src_abspath = ABSPATH . parse_url( $src, PHP_URL_PATH );
+					$src_abspath = ltrim( parse_url( $src, PHP_URL_PATH ), '/' );
+					$src_abspath = path_join( $_SERVER['DOCUMENT_ROOT'], $src_abspath );
 					$contents = file_get_contents( $src_abspath );
 				}
 
