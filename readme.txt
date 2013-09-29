@@ -1,5 +1,5 @@
 === Dependency Minification ===
-Contributors:      X-team, westonruter, fjarrett, kucrut, shadyvb, c3mdigital, lkraav
+Contributors:      X-team, westonruter, fjarrett, kucrut, shadyvb, alex-ye, c3mdigital, lkraav
 Tags:              performance, dependencies, minify, concatenate, compress, js, javascript, scripts, css, styles, stylesheets, gzip, yslow, pagespeed, caching
 Tested up to:      3.6.1
 Requires at least: 3.5
@@ -51,6 +51,9 @@ If you are using Nginx with the default Varying Vagrant Vagrants config, you'll 
 
 
 == Changelog ==
+
+= 0.9.7 =
+Improve how the plugin guesses the sources' absolute paths ([#34](https://github.com/x-team/wp-dependency-minification/pull/34)). Props [alex-ye](http://profiles.wordpress.org/alex-ye/).
 
 = 0.9.6 =
 Improve network activation and deactivation ([#37](https://github.com/x-team/wp-dependency-minification/pull/37)). Props [kucrut](http://profiles.wordpress.org/kucrut/).

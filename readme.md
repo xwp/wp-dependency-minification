@@ -3,7 +3,7 @@
 
 Automatically concatenates and minifies any scripts and stylesheets enqueued using the standard dependency system.
 
-**Contributors:** [x-team](http://profiles.wordpress.org/x-team), [westonruter](http://profiles.wordpress.org/westonruter), [fjarrett](http://profiles.wordpress.org/fjarrett), [kucrut](http://profiles.wordpress.org/kucrut), [shadyvb](http://profiles.wordpress.org/shadyvb), [c3mdigital](http://profiles.wordpress.org/c3mdigital), [lkraav](http://profiles.wordpress.org/lkraav)  
+**Contributors:** [x-team](http://profiles.wordpress.org/x-team), [westonruter](http://profiles.wordpress.org/westonruter), [fjarrett](http://profiles.wordpress.org/fjarrett), [kucrut](http://profiles.wordpress.org/kucrut), [shadyvb](http://profiles.wordpress.org/shadyvb), [alex-ye](http://profiles.wordpress.org/alex-ye), [c3mdigital](http://profiles.wordpress.org/c3mdigital), [lkraav](http://profiles.wordpress.org/lkraav)  
 **Tags:** [performance](http://wordpress.org/plugins/tags/performance), [dependencies](http://wordpress.org/plugins/tags/dependencies), [minify](http://wordpress.org/plugins/tags/minify), [concatenate](http://wordpress.org/plugins/tags/concatenate), [compress](http://wordpress.org/plugins/tags/compress), [js](http://wordpress.org/plugins/tags/js), [javascript](http://wordpress.org/plugins/tags/javascript), [scripts](http://wordpress.org/plugins/tags/scripts), [css](http://wordpress.org/plugins/tags/css), [styles](http://wordpress.org/plugins/tags/styles), [stylesheets](http://wordpress.org/plugins/tags/stylesheets), [gzip](http://wordpress.org/plugins/tags/gzip), [yslow](http://wordpress.org/plugins/tags/yslow), [pagespeed](http://wordpress.org/plugins/tags/pagespeed), [caching](http://wordpress.org/plugins/tags/caching)  
 **Requires at least:** 3.5  
 **Tested up to:** 3.6.1  
@@ -51,6 +51,9 @@ If you are using Nginx with the default Varying Vagrant Vagrants config, you'll 
     }
 
 ## Changelog ##
+
+### 0.9.7 ###
+Improve how the plugin guesses the sources' absolute paths ([#34](https://github.com/x-team/wp-dependency-minification/pull/34)). Props [alex-ye](http://profiles.wordpress.org/alex-ye/).
 
 ### 0.9.6 ###
 Improve network activation and deactivation ([#37](https://github.com/x-team/wp-dependency-minification/pull/37)). Props [kucrut](http://profiles.wordpress.org/kucrut/).
