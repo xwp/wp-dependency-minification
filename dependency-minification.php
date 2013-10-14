@@ -55,12 +55,12 @@ class Dependency_Minification {
 			in_array( $GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php' ) )
 		);
 		$disabled = (
-			! empty( self::$options['disabled_on_conditions']['all'] )
-			|| ( !empty( self::$options['disabled_on_conditions']['loggedin'] ) && is_user_logged_in() )
-			|| ( !empty( self::$options['disabled_on_conditions']['admin'] ) && is_user_logged_in() && current_user_can( 'manage_options' ) )
-			|| ( !empty( self::$options['disabled_on_conditions']['queryvar']['enabled'] )
-				&& !empty( self::$options['disabled_on_conditions']['queryvar']['enabled'] )
-				&& !empty( $_GET[ self::$options['disabled_on_conditions']['queryvar']['value'] ] )
+			( isset( self::$options['disabled_on_conditions']['all'] ) && ! empty( self::$options['disabled_on_conditions']['all'] ) )
+			|| ( isset( self::$options['disabled_on_conditions']['loggedin'] ) && ! empty( self::$options['disabled_on_conditions']['loggedin'] ) && is_user_logged_in() )
+			|| ( ! empty( self::$options['disabled_on_conditions']['admin'] ) && is_user_logged_in() && current_user_can( 'manage_options' ) )
+			|| ( ! empty( self::$options['disabled_on_conditions']['queryvar']['enabled'] )
+				&& ! empty( self::$options['disabled_on_conditions']['queryvar']['enabled'] )
+				&& ! empty( $_GET[ self::$options['disabled_on_conditions']['queryvar']['value'] ] )
 				)
 			);
 
@@ -534,7 +534,7 @@ class Dependency_Minification {
 										<?php esc_html_e( 'Logged in Users', 'depmin' ) ?>
 									</label>
 									<label for="options[disabled_on_conditions][admin]">
-										<input type="checkbox" name="options[disabled_on_conditions][admin]" id="options[disabled_on_conditions][admin]" <?php echo checked(self::$options['disabled_on_conditions']['admin']) ?> value="1">
+										<input type="checkbox" name="options[disabled_on_conditions][admin]" id="options[disabled_on_conditions][admin]" <?php echo checked( self::$options['disabled_on_conditions']['admin'] ) ?> value="1">
 										<?php esc_html_e( 'Administrators', 'depmin' ) ?>
 									</label>
 									<label for="options[disabled_on_conditions][queryvar][enabled]">
@@ -547,7 +547,7 @@ class Dependency_Minification {
 							<tr>
 								<th><?php esc_html_e( 'Exclude resources', 'depmin' ) ?>
 									<small><?php esc_html_e( 'Add URLs of resources to exclude from minification, one resource per line. Note that you can just add a script name, or the last portion of the URL so it matches.', 'depmin' ) ?></small></th>
-								<td><textarea name="options[exclude_dependencies]" id="options[exclude_dependencies]" rows="10" class="widefat"><?php echo esc_html( join( "\n", self::$options['exclude_dependencies'] ) ) ?></textarea></td>
+								<td><textarea name="options[exclude_dependencies]" id="options[exclude_dependencies]" rows="10" class="widefat"><?php echo esc_html( implode( "\n", self::$options['exclude_dependencies'] ) ) ?></textarea></td>
 							</tr>
 						</tbody>
 						<tfoot>
