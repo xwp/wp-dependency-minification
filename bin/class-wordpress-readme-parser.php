@@ -1,11 +1,15 @@
 <?php
 /**
  * Lightweight WordPress readme.txt parser and converter to Markdown
- * The WordPress-Plugin-Readme-Parser project is too heavy and has too many dependencies for what we need.
- * See: https://github.com/markjaquith/WordPress-Plugin-Readme-Parser
+ * The WordPress-Plugin-Readme-Parser project is too heavy and has too many dependencies for what we need (we don't need conversion to HTML)
+ * @link https://github.com/markjaquith/WordPress-Plugin-Readme-Parser Alternative to WordPress-Plugin-Readme-Parser
+ * @version 1.1.1
+ * @author Weston Ruter <weston@x-team.com> (@westonruter)
+ * @copyright Copyright (c) 2013, X-Team <http://x-team.com/wordpress/>
+ * @license GPLv2+
  */
 
-class XTeam_WordPress_Readme_Parser {
+class WordPress_Readme_Parser {
 	public $path;
 	public $source;
 	public $title = '';
@@ -15,7 +19,7 @@ class XTeam_WordPress_Readme_Parser {
 
 	function __construct( $args = array() ) {
 		$args = array_merge( get_object_vars( $this ), $args );
-		foreach ($args as $key => $value) {
+		foreach ( $args as $key => $value ) {
 			$this->$key = $value;
 		}
 
@@ -33,9 +37,11 @@ class XTeam_WordPress_Readme_Parser {
 		$this->short_description = $matches[3];
 		$readme_txt_rest = $matches[4];
 		$this->metadata = array_fill_keys( array( 'Contributors', 'Tags', 'Requires at least', 'Tested up to', 'Stable tag', 'License', 'License URI' ), null );
-		foreach( explode( "\n", $matches[2] ) as $metadatum ) {
-			preg_match( '/^(.+?):\s+(.+)$/', $metadatum, $metadataum_matches ) || \WP_CLI::error( "Parse error in $metadatum" );
-			list( $name, $value ) = array_slice( $metadataum_matches, 1, 2 );
+		foreach ( explode( "\n", $matches[2] ) as $metadatum ) {
+			if ( ! preg_match( '/^(.+?):\s+(.+)$/', $metadatum, $metadataum_matches ) ) {
+				throw new \Exception( "Parse error in $metadatum" );
+			}
+			list( $name, $value )  = array_slice( $metadataum_matches, 1, 2 );
 			$this->metadata[$name] = $value;
 		}
 		$this->metadata['Contributors'] = preg_split( '/\s*,\s*/', $this->metadata['Contributors'] );
@@ -48,8 +54,8 @@ class XTeam_WordPress_Readme_Parser {
 		foreach ( $section_matches as $section_match ) {
 			array_shift( $section_match );
 
-			$heading = array_shift( $section_match );
-			$body = trim( array_shift( $section_match ) );
+			$heading     = array_shift( $section_match );
+			$body        = trim( array_shift( $section_match ) );
 			$subsections = array();
 
 			// @todo Parse out front matter /(.+?)(\n=\s+.+$)/s
@@ -72,6 +78,7 @@ class XTeam_WordPress_Readme_Parser {
 
 	/**
 	 * Convert the parsed readme.txt into Markdown
+	 * @param array|string [$params]
 	 * @return string
 	 */
 	function to_markdown( $params = array() ) {
@@ -87,13 +94,28 @@ class XTeam_WordPress_Readme_Parser {
 			'Screenshots' => function ( $body ) {
 				$body = trim( $body );
 				$new_body = '';
-				$screenshots = array();
-				preg_match_all( '/^\d+\. (.+?)$/m', $body, $screenshot_matches, PREG_SET_ORDER ) || \WP_CLI::error( 'Malformed screenshot section' );
+				if ( ! preg_match_all( '/^\d+\. (.+?)$/m', $body, $screenshot_matches, PREG_SET_ORDER ) ) {
+					throw new Exception( 'Malformed screenshot section' );
+				}
 				foreach ( $screenshot_matches as $i => $screenshot_match ) {
+					$img_extensions = array( 'jpg', 'gif', 'png' );
+					foreach ( $img_extensions as $ext ) {
+						$filepath = sprintf( 'assets/screenshot-%d.%s', $i + 1, $ext );
+						if ( file_exists( dirname( $this->path ) . DIRECTORY_SEPARATOR . $filepath ) ) {
+							break;
+						}
+						else {
+							$filepath = null;
+						}
+					}
+					if ( empty( $filepath ) ) {
+						continue;
+					}
+
 					$screenshot_name = $screenshot_match[1];
 					$new_body .= sprintf( "### %s\n", $screenshot_name );
 					$new_body .= "\n";
-					$new_body .= sprintf( "![%s](assets/screenshot-%d.png)\n", $screenshot_name, $i + 1 );
+					$new_body .= sprintf( "![%s](%s)\n", $screenshot_name, $filepath );
 					$new_body .= "\n";
 				}
 				return $new_body;
@@ -102,20 +124,26 @@ class XTeam_WordPress_Readme_Parser {
 
 		// Format metadata
 		$formatted_metadata = $this->metadata;
-		$formatted_metadata['Contributors'] = join(', ', array_map(
-			function ( $contributor ) {
-				$contributor = strtolower( $contributor );
-				// @todo Map to GitHub account
-				return sprintf( '[%1$s](http://profiles.wordpress.org/%1$s)', $contributor );
-			},
-			$this->metadata['Contributors']
-		));
-		$formatted_metadata['Tags'] = join(', ', array_map(
-			function ( $tag ) {
-				return sprintf( '[%1$s](http://wordpress.org/plugins/tags/%1$s)', $tag );
-			},
-			$this->metadata['Tags']
-		));
+		$formatted_metadata['Contributors'] = join(
+			', ',
+			array_map(
+				function ( $contributor ) {
+					$contributor = strtolower( $contributor );
+					// @todo Map to GitHub account
+					return sprintf( '[%1$s](http://profiles.wordpress.org/%1$s)', $contributor );
+				},
+				$this->metadata['Contributors']
+			)
+		);
+		$formatted_metadata['Tags'] = join(
+			', ',
+			array_map(
+				function ( $tag ) {
+					return sprintf( '[%1$s](http://wordpress.org/plugins/tags/%1$s)', $tag );
+				},
+				$this->metadata['Tags']
+			)
+		);
 		$formatted_metadata['License'] = sprintf( '[%s](%s)', $formatted_metadata['License'], $formatted_metadata['License URI'] );
 		unset( $formatted_metadata['License URI'] );
 		if ( $this->metadata['Stable tag'] === 'trunk' ) {
@@ -123,9 +151,13 @@ class XTeam_WordPress_Readme_Parser {
 		}
 
 		// Render metadata
-		$markdown = "<!-- DO NOT EDIT THIS FILE; it is auto-generated from readme.txt -->\n";
+		$markdown  = "<!-- DO NOT EDIT THIS FILE; it is auto-generated from readme.txt -->\n";
 		$markdown .= sprintf( "# %s\n", $this->title );
 		$markdown .= "\n";
+		if ( file_exists( 'assets/banner-1544x500.png' ) ) {
+			$markdown .= '![Banner](assets/banner-1544x500.png)';
+			$markdown .= "\n";
+		}
 		$markdown .= sprintf( "%s\n", $this->short_description );
 		$markdown .= "\n";
 		foreach ( $formatted_metadata as $name => $value ) {
@@ -139,7 +171,7 @@ class XTeam_WordPress_Readme_Parser {
 
 			$body = $section['body'];
 			if ( isset( $section_formatters[$section['heading']] ) ) {
-				$body = trim(call_user_func( $section_formatters[$section['heading']], $body ));
+				$body = trim( call_user_func( $section_formatters[$section['heading']], $body ) );
 			}
 			if ( $body ) {
 				$markdown .= sprintf( "%s\n", $body );

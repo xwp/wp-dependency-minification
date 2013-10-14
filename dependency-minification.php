@@ -1,13 +1,32 @@
 <?php
-/*
-Plugin Name: Dependency Minification
-Description: Concatenates and minifies scripts and stylesheets.
-Version: 0.9.4
-Author: X-Team
-Author URI: http://x-team.com/
-Text Domain: depmin
-*/
+/**
+ * Plugin Name: Dependency Minification
+ * Description: Concatenates and minifies scripts and stylesheets. Please install and activate <a href="http://scribu.net" target="_blank">scribu</a>'s <a href="http://wordpress.org/plugins/proper-network-activation/" target="_blank">Proper Network Activation</a> plugin <em>before</em> activating this plugin <em>network-wide</em>.
+ * Version: 0.9.7
+ * Author: X-Team
+ * Author URI: http://x-team.com/wordpress/
+ * Text Domain: depmin
+ * License: GPLv2+
+ * Domain Path: /languages
+ */
 
+/**
+ * Copyright (c) 2013 X-Team (http://x-team.com/)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 2 or, at
+ * your discretion, any later version, as published by the Free
+ * Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 
 class Dependency_Minification {
 	static $options = array();
@@ -88,13 +107,23 @@ class Dependency_Minification {
 		self::add_rewrite_rule();
 	}
 
+	static function get_rewrite_regex() {
+		return sprintf( '^%s/%s', self::$options['endpoint'], self::FILENAME_PATTERN );
+	}
+
 	static function add_rewrite_rule() {
-		$regex = sprintf( '^%s/%s', self::$options['endpoint'], self::FILENAME_PATTERN );
+		$regex    = self::get_rewrite_regex();
 		$redirect = 'index.php?';
 		for ( $i = 0; $i < count( self::$query_vars ); $i += 1 ) {
 			$redirect .= sprintf( '%s=$matches[%d]&', self::$query_vars[$i], $i + 1 );
 		}
 		add_rewrite_rule( $regex, $redirect, 'top' );
+	}
+
+	static function remove_rewrite_rule() {
+		$regex = self::get_rewrite_regex();
+		global $wp_rewrite;
+		unset( $wp_rewrite->extra_rules_top[ $regex ] );
 	}
 
 	protected static $is_footer = array(
@@ -114,7 +143,10 @@ class Dependency_Minification {
 	/**
 	 * register_deactivation_hook
 	 */
-	static function deactivate() {}
+	static function deactivate() {
+		self::remove_rewrite_rule();
+		flush_rewrite_rules();
+	}
 
 	/**
 	 * @filter query_vars
@@ -746,34 +778,38 @@ class Dependency_Minification {
 					wp_register_style( $new_handle, $src, array(), null, $extra['media'] );
 				}
 				$wp_deps->set_group( $new_handle, /*recursive*/false, $current_group );
-
+				$new_dep = $wp_deps->registered[$new_handle];
+				$new_extra = array(
+					'data' => '',
+				);
 				foreach ( $group['handles'] as $handle ) {
 
 					// Aggregate data from scripts (e.g. wp_localize_script)
-					if ( !empty( $wp_deps->registered[$handle]->extra ) ) {
-						$dep = $wp_deps->registered[$new_handle];
-						$data = array();
-						foreach ( $wp_deps->registered[$handle]->extra as $key => $value ) {
-							$data[ $handle ] = $wp_deps->get_data( $handle, $key );
-						}
-						if ( 'data' === $key ) {
-							$concatenated_data = '';
-							foreach ( $data as $data_handle => $data_value ) {
-								$concatenated_data .= "/* wp_localize_script($data_handle): */\n";
-								$concatenated_data .= "$data_value\n\n";
+					if ( ! empty( $wp_deps->registered[$handle]->extra ) ) {
+
+						foreach ( array_keys( $wp_deps->registered[$handle]->extra ) as $extra_key ) {
+							$data = $wp_deps->get_data( $handle, $extra_key );
+
+							if ( 'data' === $extra_key ) {
+								$new_extra['data'] .= "/* wp_localize_script($handle): */\n";
+								$new_extra['data'] .= "$data\n\n";
+							} else {
+								if ( isset( $new_extra[$extra_key] ) ) {
+									// The handles should have been grouped so that they have the same extras
+									assert( $new_extra[$extra_key] === $data );
+								}
+								$new_extra[$extra_key] = $data;
 							}
-							$data = $concatenated_data;
-						} else {
-							for ( $i = 1; $i < count($data); $i += 1 ) {
-								assert( $data[0] === $data[$i] );
-							}
-							$data = array_shift( $data );
 						}
-						$dep->add_data( $key, $data );
 					}
 
 					// Mark the handles as done for the resources that have been minified
 					$wp_deps->done[] = $handle;
+				}
+
+				// Add aggregated extra to new dependency
+				foreach ( $new_extra as $key => $value ) {
+					$new_dep->add_data( $key, $value );
 				}
 			}
 		}
@@ -912,16 +948,17 @@ class Dependency_Minification {
 			// Get the contents of each script
 			$contents_for_each_dep = array();
 			foreach ( $srcs as $src ) {
-				$has_host = (bool) parse_url( $src, PHP_URL_HOST );
-				if ( ! $has_host ) {
-					$src = 'http://' . $host_domain . $src;
+
+				if ( ! preg_match( '|^(https?:)?//|', $src ) ) {
+					$src = site_url( $src ); 
 				}
 
 				// First attempt to get the file from the filesystem
 				$contents = false;
 				$is_self_hosted = self::is_self_hosted_src( $src );
 				if ( $is_self_hosted ) {
-					$src_abspath = ABSPATH . parse_url( $src, PHP_URL_PATH );
+					$src_abspath = ltrim( parse_url( $src, PHP_URL_PATH ), '/' );
+					$src_abspath = path_join( $_SERVER['DOCUMENT_ROOT'], $src_abspath );
 					$contents = file_get_contents( $src_abspath );
 				}
 

@@ -1,7 +1,7 @@
 === Dependency Minification ===
-Contributors:      X-team, westonruter, fjarrett, c3mdigital
+Contributors:      X-team, westonruter, fjarrett, kucrut, shadyvb, alex-ye, c3mdigital, lkraav
 Tags:              performance, dependencies, minify, concatenate, compress, js, javascript, scripts, css, styles, stylesheets, gzip, yslow, pagespeed, caching
-Tested up to:      3.6
+Tested up to:      3.6.1
 Requires at least: 3.5
 Stable tag:        trunk
 License:           GPLv2 or later
@@ -19,7 +19,7 @@ to prevent race conditions and to ensure that the minification process does not 
 This is a reincarnation and rewrite of the [Optimize Scripts](http://wordpress.org/plugins/optimize-scripts/) plugin,
 which this plugin now supersedes.
 
-Features:
+**Features:**
 
  * Minified sources are stored in the WP Options table so no special filesystem access is required.
  * Endpoint for minified requests is at `/_minified`, which can be configured.
@@ -38,9 +38,7 @@ Features:
  * Can serve compressed responses with `gzip` or `deflate`.
  * Transforms relatives paths in stylesheets (e.g. background-images) to absolute ones, so that they don't 404.
 
-Development of plugin is done on GitHub: [https://github.com/x-team/wp-dependency-minification](https://github.com/x-team/wp-dependency-minification)
-
-Pull requests welcome.
+**Development of this plugin is done [on GitHub](https://github.com/x-team/wp-dependency-minification). Pull requests welcome. Please see [issues](https://github.com/x-team/wp-dependency-minification/issues) reported there before going to the plugin forum.**
 
 If you are using Nginx with the default Varying Vagrant Vagrants config, you'll want to remove `css|js` from this rule in `nginx-wp-common.conf` (or remove the rule altogether):
 
@@ -53,6 +51,15 @@ If you are using Nginx with the default Varying Vagrant Vagrants config, you'll 
 
 
 == Changelog ==
+
+= 0.9.7 =
+Improve how the plugin guesses the sources' absolute paths ([#34](https://github.com/x-team/wp-dependency-minification/pull/34)). Props [alex-ye](http://profiles.wordpress.org/alex-ye/).
+
+= 0.9.6 =
+Improve network activation and deactivation ([#37](https://github.com/x-team/wp-dependency-minification/pull/37)). Props [kucrut](http://profiles.wordpress.org/kucrut/).
+
+= 0.9.5 =
+Fix wp_localize_script data lost in minification ([#28](https://github.com/x-team/wp-dependency-minification/issues/28)). Props [lkraav](http://profiles.wordpress.org/lkraav/).
 
 = 0.9.4 =
 Issue warning if pretty permalinks are not enabled ([#16](https://github.com/x-team/wp-dependency-minification/issues/16)). Props [shadyvb](http://profiles.wordpress.org/shadyvb/).
