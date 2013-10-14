@@ -50,6 +50,8 @@ If you are using Nginx with the default Varying Vagrant Vagrants config, you'll 
         log_not_found off;
     }
 
+[![Build Status](https://travis-ci.org/x-team/wp-dependency-minification.png)](https://travis-ci.org/x-team/wp-dependency-minification)
+
 ## Changelog ##
 
 ### 0.9.7 ###
