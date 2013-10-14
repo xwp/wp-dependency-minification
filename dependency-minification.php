@@ -59,7 +59,7 @@ class Dependency_Minification {
 				'admin_page_capability'               => 'edit_theme_options',
 				'show_error_messages'                 => ( defined( 'WP_DEBUG' ) && WP_DEBUG ),
 				'disable_if_wp_debug'                 => true,
-				'exclude_dependencies'                => '',
+				'exclude_dependencies'                => array(),
 				'disabled_on_conditions'              => array(),
 			);
 		$options = get_option( 'dependency_minification_options', array() );
