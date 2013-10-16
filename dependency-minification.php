@@ -209,8 +209,7 @@ class Dependency_Minification {
 			?>
 			<div class="error">
 				<p><?php
-				echo esc_html(
-					sprintf(
+				echo sprintf(
 					'<strong>%1$s</strong>: %2$s',
 					__( 'Dependency Minification', 'depmin' ),
 					sprintf(
@@ -221,8 +220,7 @@ class Dependency_Minification {
 							__( 'Permalinks Settings', 'depmin' )
 						)
 					)
-					)
-				);
+				); // xss ok
 				?></p>
 			</div>
 			<?php
