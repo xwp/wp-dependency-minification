@@ -63,10 +63,12 @@ class Dependency_Minification {
 				'disabled_on_conditions'              => array(),
 			);
 		$options = get_option( 'dependency_minification_options', array() );
-		self::$options = apply_filters( 'dependency_minification_options', array_merge(
-			$defaults,
-			$options
-		) );
+		self::$options = apply_filters(
+			'dependency_minification_options', array_merge(
+				$defaults,
+				$options
+				)
+			);
 
 		$is_frontend = ! (
 			is_admin()
@@ -83,11 +85,7 @@ class Dependency_Minification {
 				)
 			);
 
-		if (
-			$is_frontend
-			&&
-			! $disabled
-			) {
+		if ( $is_frontend && ! $disabled ) {
 			add_filter( 'print_scripts_array', array( __CLASS__, 'filter_print_scripts_array' ) );
 			add_filter( 'print_styles_array', array( __CLASS__, 'filter_print_styles_array' ) );
 		}
@@ -206,7 +204,8 @@ class Dependency_Minification {
 			?>
 			<div class="error">
 				<p><?php
-				echo sprintf(
+				echo esc_html(
+					sprintf(
 					'<strong>%1$s</strong>: %2$s',
 					__( 'Dependency Minification', 'depmin' ),
 					sprintf(
@@ -216,6 +215,7 @@ class Dependency_Minification {
 							admin_url( 'options-permalink.php' ),
 							__( 'Permalinks Settings', 'depmin' )
 						)
+					)
 					)
 				);
 				?></p>
@@ -239,19 +239,23 @@ class Dependency_Minification {
 		<div class="updated">
 			<?php if ( 'expire' === $updated_task ) : ?>
 				<p><?php
-				echo esc_html( sprintf(
+				echo esc_html(
+					sprintf(
 					_n( 'Expired %d minified dependency.', 'Expired %d minified dependencies.', $updated_count, 'depmin' ),
 					$updated_count
-				));
+					)
+				);
 				?></p>
 			<?php elseif ( 'purge' === $updated_task ) : ?>
 				<p><?php
-				echo esc_html( sprintf(
+				echo esc_html(
+					sprintf(
 					_n( 'Purged %d minified dependency.', 'Purged %d minified dependencies.', $updated_count, 'depmin' ),
 					$updated_count
-				) );
+					)
+				);
 				?></p>
-			<?php else: ?>
+			<?php else : ?>
 				<p><?php esc_html_e( 'Updated.', 'depmin' ) ?></p>
 			<?php endif; ?>
 		</div>
@@ -296,21 +300,21 @@ class Dependency_Minification {
 		if ( ! current_user_can( self::$options['admin_page_capability'] ) ) {
 			wp_die( __( 'You are not allowed to do that.', 'depmin' ) );
 		}
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], self::AJAX_OPTIONS_ACTION ) ) {
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], self::AJAX_OPTIONS_ACTION ) ) {
 			wp_die( __( 'Nonce check failed. Try reloading the previous page.', 'depmin' ) );
 		}
 		$updated_count = 0;
-		if ( ! empty( $_REQUEST['options'] ) ) {
+		if ( ! empty( $_POST['options'] ) ) {
 			$options = get_option( 'dependency_minification_options' );
-			$options['exclude_dependencies']   = array_filter( preg_split( "#[\n\r]+#", $_REQUEST['options']['exclude_dependencies'] ) );
-			$options['disabled_on_conditions'] = $_REQUEST['options']['disabled_on_conditions'];
-			$options['default_exclude_remote_dependencies'] = isset( $_REQUEST['options']['default_exclude_remote_dependencies'] );
+			$options['exclude_dependencies']   = array_filter( preg_split( "#[\n\r]+#", $_POST['options']['exclude_dependencies'] ) );
+			$options['disabled_on_conditions'] = $_POST['options']['disabled_on_conditions'];
+			$options['default_exclude_remote_dependencies'] = isset( $_POST['options']['default_exclude_remote_dependencies'] );
 			update_option( 'dependency_minification_options', $options );
 		}
 
-		$redirect_url = add_query_arg( 'page', self::ADMIN_PAGE_SLUG, admin_url( self::ADMIN_PARENT_PAGE ) );
-		$redirect_url = add_query_arg( 'updated', 1, $redirect_url );
-		$redirect_url.= '#tab-settings';
+		$redirect_url  = add_query_arg( 'page', self::ADMIN_PAGE_SLUG, admin_url( self::ADMIN_PARENT_PAGE ) );
+		$redirect_url  = add_query_arg( 'updated', 1, $redirect_url );
+		$redirect_url .= '#tab-settings';
 		wp_redirect( $redirect_url );
 
 		die();
@@ -335,7 +339,7 @@ class Dependency_Minification {
 		$nonce = wp_create_nonce( self::AJAX_ACTION );
 		?>
 		<div class="wrap">
-			<div class="icon32" id="icon-tools"><br></div>
+			<?php screen_icon( 'tools' ) ?>
 			<h2><?php esc_html_e( 'Dependency Minification', 'depmin' ) ?></h2>
 			<h2 class="nav-tab-wrapper">
 				<a href="#tab-status" class="nav-tab nav-tab-active"><?php esc_html_e( 'Status', 'depmin' ) ?></a>
@@ -352,7 +356,7 @@ class Dependency_Minification {
 				$option_names = $wpdb->get_col( $sql );
 				$minified_dependencies = array();
 				foreach ( $option_names as $option_name ) {
-					$minified_dependencies[$option_name] = get_option($option_name);
+					$minified_dependencies[$option_name] = get_option( $option_name );
 				}
 				$minified_dependencies = array_filter( $minified_dependencies );
 
@@ -428,10 +432,10 @@ class Dependency_Minification {
 									'depmin_option_name[]' => $option_name,
 								);
 								?>
-								<tr id="<?php echo esc_attr($option_name) ?>" valign="top">
+								<tr id="<?php echo esc_attr( $option_name ) ?>" valign="top">
 									<th scope="row" class="check-column">
-										<label class="screen-reader-text" for="cb-select-<?php echo esc_attr($option_name) ?>"><?php esc_html_e( 'Select minified dependency', 'depmin' ) ?></label>
-										<input id="cb-select-<?php echo esc_attr($option_name) ?>" type="checkbox" name="depmin_option_name[]" value="<?php echo esc_attr($option_name) ?>" <?php disabled( $pending ) ?>>
+										<label class="screen-reader-text" for="cb-select-<?php echo esc_attr( $option_name ) ?>"><?php esc_html_e( 'Select minified dependency', 'depmin' ) ?></label>
+										<input id="cb-select-<?php echo esc_attr( $option_name ) ?>" type="checkbox" name="depmin_option_name[]" value="<?php echo esc_attr( $option_name ) ?>" <?php disabled( $pending ) ?>>
 									</th>
 									<td class="column-dependencies">
 										<strong>
@@ -475,7 +479,7 @@ class Dependency_Minification {
 													<span class="view">
 														<a href="<?php echo esc_url( $minified_src ) ?>" target="_blank" title="<?php esc_attr_e( 'View minified dependencies (opens in new window)', 'depmin' ) ?>" rel="permalink"><?php esc_html_e( 'View minified', 'depmin' ) ?></a>
 													</span>
-												<?php else: ?>
+												<?php else : ?>
 													<span class="trash">
 														<?php
 														$_link_params = $link_params;
@@ -512,11 +516,11 @@ class Dependency_Minification {
 										<td class="<?php echo esc_attr( $col ) ?> column-<?php echo esc_attr( $col ) ?>">
 											<?php if ( $pending ) : ?>
 												<em><?php esc_html_e( '(Pending)', 'depmin' ) ?></em>
-											<?php else: ?>
+											<?php else : ?>
 												<time title="<?php echo esc_attr( gmdate( 'c', $time ) ) ?>" datetime="<?php echo esc_attr( gmdate( 'c', $time ) ) ?>">
 													<?php if ( $time < time() ) : ?>
 														<?php echo esc_html( sprintf( __( '%s ago' ), human_time_diff( $time ) ) ); ?>
-													<?php else: ?>
+													<?php else : ?>
 														<?php echo esc_html( sprintf( __( '%s from now' ), human_time_diff( $time ) ) ); ?>
 													<?php endif; ?>
 												</time>
@@ -534,7 +538,7 @@ class Dependency_Minification {
 			$nonce = wp_create_nonce( self::AJAX_OPTIONS_ACTION );
 			?>
 			<div class="nav-tab-content" id="tab-content-settings">
-				<form action="<?php echo admin_url( 'admin-ajax.php' ) ?>" method="post" class="form-table options">
+				<form action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ) ?>" method="post" class="form-table options">
 					<input type="hidden" name="action" value="<?php echo esc_attr( self::AJAX_OPTIONS_ACTION ) ?>">
 					<input type="hidden" name="_wpnonce" value="<?php echo esc_attr( $nonce ) ?>">
 					<table class="widefat">
@@ -544,7 +548,7 @@ class Dependency_Minification {
 									<small><?php esc_html_e( 'Disable the plugin\'s functionality completely', 'depmin' ) ?></small></th>
 								<td>
 									<label for="options[disabled_on_conditions][all]">
-										<input type="checkbox" name="options[disabled_on_conditions][all]" id="options[disabled_on_conditions][all]" <?php echo checked( self::$options['disabled_on_conditions']['all'] ) ?> value="1">
+										<input type="checkbox" name="options[disabled_on_conditions][all]" id="options[disabled_on_conditions][all]" <?php checked( self::$options['disabled_on_conditions']['all'] ) ?> value="1">
 									</label>
 								</td>
 							</tr>
@@ -553,7 +557,7 @@ class Dependency_Minification {
 									<small><?php esc_html_e( 'Makes the default is to exclude remote dependencies', 'depmin' ) ?></small></th>
 								<td>
 									<label for="options[default_exclude_remote_dependencies]">
-										<input type="checkbox" name="options[default_exclude_remote_dependencies]" id="options[default_exclude_remote_dependencies]" <?php echo checked( self::$options['default_exclude_remote_dependencies'] ) ?> value="1">
+										<input type="checkbox" name="options[default_exclude_remote_dependencies]" id="options[default_exclude_remote_dependencies]" <?php checked( self::$options['default_exclude_remote_dependencies'] ) ?> value="1">
 									</label>
 								</td>
 							</tr>
@@ -562,15 +566,15 @@ class Dependency_Minification {
 									<small><?php esc_html_e( 'Select conditions where minification should not happen', 'depmin' ) ?></small></th>
 								<td>
 									<label for="options[disabled_on_conditions][loggedin]">
-										<input type="checkbox" name="options[disabled_on_conditions][loggedin]" id="options[disabled_on_conditions][loggedin]" <?php echo checked( self::$options['disabled_on_conditions']['loggedin'] ) ?> value="1">
+										<input type="checkbox" name="options[disabled_on_conditions][loggedin]" id="options[disabled_on_conditions][loggedin]" <?php checked( self::$options['disabled_on_conditions']['loggedin'] ) ?> value="1">
 										<?php esc_html_e( 'Logged in Users', 'depmin' ) ?>
 									</label>
 									<label for="options[disabled_on_conditions][admin]">
-										<input type="checkbox" name="options[disabled_on_conditions][admin]" id="options[disabled_on_conditions][admin]" <?php echo checked( self::$options['disabled_on_conditions']['admin'] ) ?> value="1">
+										<input type="checkbox" name="options[disabled_on_conditions][admin]" id="options[disabled_on_conditions][admin]" <?php checked( self::$options['disabled_on_conditions']['admin'] ) ?> value="1">
 										<?php esc_html_e( 'Administrators', 'depmin' ) ?>
 									</label>
 									<label for="options[disabled_on_conditions][queryvar][enabled]">
-										<input type="checkbox" name="options[disabled_on_conditions][queryvar][enabled]" id="options[disabled_on_conditions][queryvar][enabled]" <?php echo checked( self::$options['disabled_on_conditions']['queryvar']['enabled'] ) ?> value="1">
+										<input type="checkbox" name="options[disabled_on_conditions][queryvar][enabled]" id="options[disabled_on_conditions][queryvar][enabled]" <?php checked( self::$options['disabled_on_conditions']['queryvar']['enabled'] ) ?> value="1">
 										<?php esc_html_e( 'Query Variable', 'depmin' ) ?>
 										<input type="text" name="options[disabled_on_conditions][queryvar][value]" id="options[disabled_on_conditions][queryvar][value]" value="<?php echo esc_html( self::$options['disabled_on_conditions']['queryvar']['value'] ) ?>">
 									</label>
@@ -619,12 +623,15 @@ class Dependency_Minification {
 		$src_hash = self::hash_array( wp_list_pluck( $deps, 'src' ) );
 		$ver_hash = self::hash_array( wp_list_pluck( $deps, 'ver' ) );
 		$src = trailingslashit( home_url( self::$options['endpoint'] ) );
-		$src .= join( '.', array(
-			join( ',', wp_list_pluck( $deps, 'handle' ) ),
-			$src_hash,
-			$ver_hash,
-			$type === 'scripts' ? 'js' : 'css',
-		) );
+		$src .= join(
+			'.', 
+			array(
+				join( ',', wp_list_pluck( $deps, 'handle' ) ),
+				$src_hash,
+				$ver_hash,
+				$type === 'scripts' ? 'js' : 'css',
+			)
+			);
 		return $src;
 	}
 
@@ -635,10 +642,10 @@ class Dependency_Minification {
 	 * @param {string} $type (scripts|styles)
 	 */
 	static function filter_print_dependency_array( array $handles, $type ) {
-		assert( in_array($type, array( 'scripts', 'styles' ) ) );
-		assert( isset($GLOBALS["wp_{$type}"]) );
+		assert( in_array( $type, array( 'scripts', 'styles' ) ) );
+		assert( isset( $GLOBALS["wp_{$type}"] ) );
 		$wp_deps = &$GLOBALS["wp_{$type}"];
-		assert( is_a($wp_deps, 'WP_Dependencies') );
+		assert( is_a( $wp_deps, 'WP_Dependencies' ) );
 
 		/**
 		 * Determine if minification is enabled for the provided $handles.
@@ -667,7 +674,7 @@ class Dependency_Minification {
 				(
 					$wp_deps->groups[$handle] < $current_group
 					&&
-					!in_array($handle, $wp_deps->done)
+					! in_array( $handle, $wp_deps->done )
 				)
 			);
 
@@ -766,13 +773,13 @@ class Dependency_Minification {
 				$filtered_handles = array_merge( $filtered_handles, $group['handles'] );
 			} else {
 				self::$minified_count += 1;
-				$new_handle = sprintf('minified-%d', self::$minified_count);
+				$new_handle = sprintf( 'minified-%d', self::$minified_count );
 				$filtered_handles[] = $new_handle;
 				$src = self::get_dependency_minified_url( $deps, $type );
 
 				// Deps are registered without versions since the URL includes the version (ver_hash)
 				if ( 'scripts' === $type ) {
-					$in_footer = !empty( $extra['group'] ); // @todo what if the group is not 0 or 1?
+					$in_footer = ! empty( $extra['group'] ); // @todo what if the group is not 0 or 1?
 					wp_register_script( $new_handle, $src, array(), null, $in_footer );
 				} elseif ( 'styles' === $type ) {
 					wp_register_style( $new_handle, $src, array(), null, $extra['media'] );
@@ -830,7 +837,7 @@ class Dependency_Minification {
 			(
 				empty( $parsed_url['host'] )
 				&&
-				substr( $parsed_url['path'], 0, 1) === '/'
+				substr( $parsed_url['path'], 0, 1 ) === '/'
 			)
 			||
 			(
@@ -861,7 +868,7 @@ class Dependency_Minification {
 		foreach ( $handles as $handle ) {
 			$src = $wp_deps->registered[$handle]->src;
 			$is_local = self::is_self_hosted_src( $src );
-			$is_excluded = !$is_local && self::$options['default_exclude_remote_dependencies'];
+			$is_excluded = ! $is_local && self::$options['default_exclude_remote_dependencies'];
 			$is_excluded = $is_excluded || self::is_url_included( $src, self::$options['exclude_dependencies'] );
 			$is_excluded = apply_filters( 'dependency_minification_excluded', $is_excluded, $handle, $src );
 
@@ -905,8 +912,8 @@ class Dependency_Minification {
 		foreach ( $handles as $handle ) {
 			$dep = &$wp_deps->registered[$handle];
 			$extra = (array) $dep->extra;
-			if ( is_a($wp_deps, 'WP_Styles') ) {
-				$extra['media'] = is_string($dep->args) ? $dep->args : 'all';
+			if ( is_a( $wp_deps, 'WP_Styles' ) ) {
+				$extra['media'] = is_string( $dep->args ) ? $dep->args : 'all';
 			}
 			unset($extra['suffix']);
 			unset($extra['rtl']);
@@ -915,8 +922,8 @@ class Dependency_Minification {
 			if ( is_a( $wp_deps, 'WP_Scripts' ) && empty( $extra['group'] ) && is_int( $dep->args ) ) {
 				$extra['group'] = $dep->args;
 			}
-			ksort($extra);
-			$key = serialize($extra);
+			ksort( $extra );
+			$key = serialize( $extra );
 			$bundles[$key][] = $handle;
 		}
 		return $bundles;
@@ -936,10 +943,10 @@ class Dependency_Minification {
 		try {
 			$is_css = ( 'styles' === $type );
 			if ( 'scripts' === $type ) {
-				require_once( dirname(__FILE__) . '/minify/JS/JSMin.php' );
+				require_once( dirname( __FILE__ ) . '/minify/JS/JSMin.php' );
 			} elseif ( 'styles' === $type ) {
-				require_once( dirname(__FILE__) . '/minify/CSS/UriRewriter.php' );
-				require_once( dirname(__FILE__) . '/minify/CSS/Compressor.php' );
+				require_once( dirname( __FILE__ ) . '/minify/CSS/UriRewriter.php' );
+				require_once( dirname( __FILE__ ) . '/minify/CSS/Compressor.php' );
 			}
 
 			$unminified_size = 0;
@@ -965,17 +972,17 @@ class Dependency_Minification {
 				// Dependency is not self-hosted or it the filesystem read failed, so do HTTP request
 				if ( false === $contents ) {
 					$r = wp_remote_get( $src );
-					if ( is_wp_error($r) ) {
-						throw new Exception("Failed to retrieve $src: " . $r->get_error_message());
+					if ( is_wp_error( $r ) ) {
+						throw new Exception( "Failed to retrieve $src: " . $r->get_error_message() );
 					} elseif ( intval( wp_remote_retrieve_response_code( $r ) ) !== 200 ) {
-						throw new Dependency_Minification_Exception( sprintf('Request for %s returned with HTTP %d %s', $src, wp_remote_retrieve_response_code( $r ), wp_remote_retrieve_response_message( $r )) );
+						throw new Dependency_Minification_Exception( sprintf( 'Request for %s returned with HTTP %d %s', $src, wp_remote_retrieve_response_code( $r ), wp_remote_retrieve_response_message( $r ) ) );
 					}
 					$contents = wp_remote_retrieve_body( $r );
 				}
 				$unminified_size += strlen( $contents );
 
 				// Remove the BOM
-				$contents = preg_replace("/^\xEF\xBB\xBF/", '', $contents);
+				$contents = preg_replace( "/^\xEF\xBB\xBF/", '', $contents );
 
 				// Rewrite relative paths in CSS
 				$src_dir_path = dirname( parse_url( $src, PHP_URL_PATH ) );
@@ -989,13 +996,13 @@ class Dependency_Minification {
 			$contents = '';
 
 			// Print a manifest of the dependencies
-			$contents .= sprintf("/*! This minified dependency bundle includes:\n");
+			$contents .= sprintf( "/*! This minified dependency bundle includes:\n" );
 			$i = 0;
 			foreach ( $srcs as $src ) {
 				$i += 1;
 				$contents .= sprintf( " * %02d. %s\n", $i, $src );
 			}
-			$contents .= sprintf(" */\n\n");
+			$contents .= sprintf( " */\n\n" );
 
 			// Minify
 			// Note: semicolon needed in case a file lacks trailing semicolon
@@ -1006,13 +1013,13 @@ class Dependency_Minification {
 			// is the comment-reply.js in WordPress.
 			if ( 'scripts' === $type ) {
 				$minified_contents = join( "\n;;\n", $contents_for_each_dep );
-				$minified_contents = JSMin::minify($minified_contents);
+				$minified_contents = JSMin::minify( $minified_contents );
 				if ( false === $minified_contents ) {
 					throw new Dependency_Minification_Exception( 'JavaScript parse error' );
 				}
 			} elseif ( 'styles' === $type ) {
 				$minified_contents = join( "\n\n", $contents_for_each_dep );
-				$minified_contents = Minify_CSS_Compressor::process($minified_contents);
+				$minified_contents = Minify_CSS_Compressor::process( $minified_contents );
 			}
 
 			$contents .= $minified_contents;
@@ -1023,12 +1030,15 @@ class Dependency_Minification {
 			$cached['error'] = null;
 		}
 		catch (Exception $e) {
-			error_log( sprintf( '%s in %s: %s for srcs %s',
-				get_class( $e ),
-				__FUNCTION__,
-				$e->getMessage(),
-				join( ',', $srcs )
-			) );
+			error_log(
+				sprintf(
+					'%s in %s: %s for srcs %s',
+					get_class( $e ),
+					__FUNCTION__,
+					$e->getMessage(),
+					join( ',', $srcs )
+				)
+				);
 			$cached['error'] = $e->getMessage();
 			$max_age = apply_filters( 'dependency_minification_cache_control_max_age_error', (int) self::$options['cache_control_max_age_error'], $srcs );
 			$cached['expires'] = time() + $max_age;
@@ -1064,7 +1074,7 @@ class Dependency_Minification {
 			}
 
 			$cache_option_name = self::get_cache_option_name( $src_hash );
-			$cached = get_option($cache_option_name);
+			$cached = get_option( $cache_option_name );
 			if ( empty( $cached ) ) {
 				throw new Dependency_Minification_Exception( 'Unknown minified dependency bundle.', 404 );
 			}
@@ -1073,9 +1083,9 @@ class Dependency_Minification {
 			}
 
 			// Send the response headers for caching
-			header( 'Expires: ' . str_replace('+0000', 'GMT', gmdate('r', $cached['expires'])) );
+			header( 'Expires: ' . str_replace( '+0000', 'GMT', gmdate( 'r', $cached['expires'] ) ) );
 			if ( ! empty( $cached['last_modified'] ) ) {
-				header( 'Last-Modified: ' . str_replace('+0000', 'GMT', gmdate('r', $cached['last_modified'])) );
+				header( 'Last-Modified: ' . str_replace( '+0000', 'GMT', gmdate( 'r', $cached['last_modified'] ) ) );
 			}
 			if ( ! empty( $cached['etag'] ) ) {
 				header( 'ETag: ' . $cached['etag'] );
@@ -1103,24 +1113,24 @@ class Dependency_Minification {
 			}
 
 			if ( $is_not_modified ) {
-				status_header(304);
+				status_header( 304 );
 			} else {
-				status_header(200);
+				status_header( 200 );
 				$out = $cached['contents'];
 
 				global $compress_scripts, $compress_css;
 				script_concat_settings();
 				$compress = ( 'js' === $ext ? $compress_scripts : $compress_css );
-				$force_gzip = ( $compress && defined('ENFORCE_GZIP') && ENFORCE_GZIP );
+				$force_gzip = ( $compress && defined( 'ENFORCE_GZIP' ) && ENFORCE_GZIP );
 
 				// Copied from /wp-admin/load-scripts.php
-				if ( $compress && ! ini_get('zlib.output_compression') && 'ob_gzhandler' != ini_get('output_handler') && isset($_SERVER['HTTP_ACCEPT_ENCODING']) ) {
-					header('Vary: Accept-Encoding'); // Handle proxies
-					if ( false !== stripos($_SERVER['HTTP_ACCEPT_ENCODING'], 'deflate') && function_exists('gzdeflate') && ! $force_gzip ) {
-						header('Content-Encoding: deflate');
+				if ( $compress && ! ini_get( 'zlib.output_compression' ) && 'ob_gzhandler' != ini_get( 'output_handler' ) && isset( $_SERVER['HTTP_ACCEPT_ENCODING'] ) ) {
+					header( 'Vary: Accept-Encoding' ); // Handle proxies
+					if ( false !== stripos( $_SERVER['HTTP_ACCEPT_ENCODING'], 'deflate' ) && function_exists( 'gzdeflate' ) && ! $force_gzip ) {
+						header( 'Content-Encoding: deflate' );
 						$out = gzdeflate( $out, 3 );
-					} elseif ( false !== stripos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') && function_exists('gzencode') ) {
-						header('Content-Encoding: gzip');
+					} elseif ( false !== stripos( $_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip' ) && function_exists( 'gzencode' ) ) {
+						header( 'Content-Encoding: gzip' );
 						$out = gzencode( $out, 3 );
 					}
 				}
@@ -1137,7 +1147,14 @@ class Dependency_Minification {
 				$status = $e->getCode();
 				$message = $e->getMessage();
 			} else {
-				error_log( sprintf('%s: %s via URI %s', __METHOD__, $e->getMessage(), esc_url_raw( $_SERVER['REQUEST_URI'] )) );
+				error_log(
+					sprintf(
+						'%s: %s via URI %s', 
+						__METHOD__, 
+						$e->getMessage(), 
+						esc_url_raw( $_SERVER['REQUEST_URI'] )
+						)
+					);
 				$message = 'Unexpected error occurred.';
 			}
 			if ( empty($status) ) {
