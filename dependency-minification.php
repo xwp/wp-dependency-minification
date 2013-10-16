@@ -60,7 +60,12 @@ class Dependency_Minification {
 				'show_error_messages'                 => ( defined( 'WP_DEBUG' ) && WP_DEBUG ),
 				'disable_if_wp_debug'                 => true,
 				'exclude_dependencies'                => array(),
-				'disabled_on_conditions'              => array(),
+				'disabled_on_conditions'              => array(
+					'all' => false,
+					'loggedin' => false,
+					'admin' => false,
+					'queryvar' => false,
+					),
 			);
 		$options = get_option( 'dependency_minification_options', array() );
 		self::$options = apply_filters(
