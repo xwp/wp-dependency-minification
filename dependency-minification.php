@@ -641,8 +641,9 @@ class Dependency_Minification {
 	/**
 	 * Separate external from internal (local) dependencies and then group the
 	 * internal resources into maximal groups.
-	 * @param {array} $handles
-	 * @param {string} $type (scripts|styles)
+	 * @param array $handles
+	 * @param string $type (scripts|styles)
+	 * @return array
 	 */
 	static function filter_print_dependency_array( array $handles, $type ) {
 		assert( in_array( $type, array( 'scripts', 'styles' ) ) );
@@ -861,7 +862,9 @@ class Dependency_Minification {
 	}
 
 	/**
-	 * @return {array} Two members, the 1st containing external handles and the 2nd containing internal handles
+	 * @param array $handles
+	 * @param WP_Dependencies $wp_deps
+	 * @return array Two members, the 1st containing external handles and the 2nd containing internal handles
 	 */
 	static function group_dependencies_by_exclusion( $handles, WP_Dependencies $wp_deps ) {
 		$groups = array();
@@ -907,8 +910,9 @@ class Dependency_Minification {
 
 	/**
 	 * @todo This is only applicable for styles, right? The media and conditional extras.
-	 * @param {array} $handles
-	 * @return {array} Associative array where the keys are the args and extras
+	 * @param array $handles
+	 * @param WP_Dependencies $wp_deps
+	 * @return array Associative array where the keys are the args and extras
 	 */
 	static function group_handles_by_extra( array $handles, WP_Dependencies $wp_deps ) {
 		$bundles = array();
