@@ -5,7 +5,7 @@
  * Version: 0.9.7
  * Author: X-Team
  * Author URI: http://x-team.com/wordpress/
- * Text Domain: depmin
+ * Text Domain: dependency-minification
  * License: GPLv2+
  * Domain Path: /languages
  */
@@ -192,8 +192,8 @@ class Dependency_Minification {
 	static function admin_menu() {
 		self::$admin_page_hook = add_submenu_page(
 			self::ADMIN_PARENT_PAGE,
-			__( 'Dependency Minification', 'depmin' ),
-			__( 'Dep. Minification', 'depmin' ),
+			__( 'Dependency Minification', 'dependency-minification' ),
+			__( 'Dep. Minification', 'dependency-minification' ),
 			self::$options['admin_page_capability'],
 			self::ADMIN_PAGE_SLUG,
 			array( __CLASS__, 'admin_page' )
@@ -211,13 +211,13 @@ class Dependency_Minification {
 				<p><?php
 				echo sprintf(
 					'<strong>%1$s</strong>: %2$s',
-					__( 'Dependency Minification', 'depmin' ),
+					__( 'Dependency Minification', 'dependency-minification' ),
 					sprintf(
-						__( 'Pretty permalinks are not enabled in your %1$s, which is required for this plugin to operate. Select something other than Default (e.g. ?p=123)', 'depmin' ),
+						__( 'Pretty permalinks are not enabled in your %1$s, which is required for this plugin to operate. Select something other than Default (e.g. ?p=123)', 'dependency-minification' ),
 						sprintf(
 							'<a href="%1$s">%2$s</a>',
 							admin_url( 'options-permalink.php' ),
-							__( 'Permalinks Settings', 'depmin' )
+							__( 'Permalinks Settings', 'dependency-minification' )
 						)
 					)
 				); // xss ok
@@ -244,7 +244,7 @@ class Dependency_Minification {
 				<p><?php
 				echo esc_html(
 					sprintf(
-					_n( 'Expired %d minified dependency.', 'Expired %d minified dependencies.', $updated_count, 'depmin' ),
+					_n( 'Expired %d minified dependency.', 'Expired %d minified dependencies.', $updated_count, 'dependency-minification' ),
 					$updated_count
 					)
 				);
@@ -253,13 +253,13 @@ class Dependency_Minification {
 				<p><?php
 				echo esc_html(
 					sprintf(
-					_n( 'Purged %d minified dependency.', 'Purged %d minified dependencies.', $updated_count, 'depmin' ),
+					_n( 'Purged %d minified dependency.', 'Purged %d minified dependencies.', $updated_count, 'dependency-minification' ),
 					$updated_count
 					)
 				);
 				?></p>
 			<?php else : ?>
-				<p><?php esc_html_e( 'Updated.', 'depmin' ) ?></p>
+				<p><?php esc_html_e( 'Updated.', 'dependency-minification' ) ?></p>
 			<?php endif; ?>
 		</div>
 		<?php
@@ -270,10 +270,10 @@ class Dependency_Minification {
 	 */
 	static function admin_ajax_handler() {
 		if ( ! current_user_can( self::$options['admin_page_capability'] ) ) {
-			wp_die( __( 'You are not allowed to do that.', 'depmin' ) );
+			wp_die( __( 'You are not allowed to do that.', 'dependency-minification' ) );
 		}
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], self::AJAX_ACTION ) ) {
-			wp_die( __( 'Nonce check failed. Try reloading the previous page.', 'depmin' ) );
+			wp_die( __( 'Nonce check failed. Try reloading the previous page.', 'dependency-minification' ) );
 		}
 		$updated_count = 0;
 		if ( ! empty( $_REQUEST['depmin_option_name'] ) && ! empty( $_REQUEST['depmin_task'] ) ) {
@@ -301,10 +301,10 @@ class Dependency_Minification {
 	 */
 	static function admin_ajax_options_handler() {
 		if ( ! current_user_can( self::$options['admin_page_capability'] ) ) {
-			wp_die( __( 'You are not allowed to do that.', 'depmin' ) );
+			wp_die( __( 'You are not allowed to do that.', 'dependency-minification' ) );
 		}
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], self::AJAX_OPTIONS_ACTION ) ) {
-			wp_die( __( 'Nonce check failed. Try reloading the previous page.', 'depmin' ) );
+			wp_die( __( 'Nonce check failed. Try reloading the previous page.', 'dependency-minification' ) );
 		}
 		$updated_count = 0;
 		if ( ! empty( $_POST['options'] ) ) {
@@ -329,7 +329,7 @@ class Dependency_Minification {
 	static function admin_plugin_action_links( $links, $file ) {
 		if ( plugin_basename( __FILE__ ) === $file ) {
 			$admin_page_url  = admin_url( sprintf( '%s?page=%s', self::ADMIN_PARENT_PAGE, self::ADMIN_PAGE_SLUG ) );
-			$admin_page_link = sprintf( '<a href="%s">%s</a>', esc_url( $admin_page_url ), esc_html__( 'Settings', 'depmin' ) );
+			$admin_page_link = sprintf( '<a href="%s">%s</a>', esc_url( $admin_page_url ), esc_html__( 'Settings', 'dependency-minification' ) );
 			array_push( $links, $admin_page_link );
 		}
 		return $links;
@@ -337,16 +337,16 @@ class Dependency_Minification {
 
 	static function admin_page() {
 		if ( ! current_user_can( self::$options['admin_page_capability'] ) ) {
-			wp_die( __( 'You cannot access this page.', 'depmin' ) );
+			wp_die( __( 'You cannot access this page.', 'dependency-minification' ) );
 		}
 		$nonce = wp_create_nonce( self::AJAX_ACTION );
 		?>
 		<div class="wrap">
 			<?php screen_icon( 'tools' ) ?>
-			<h2><?php esc_html_e( 'Dependency Minification', 'depmin' ) ?></h2>
+			<h2><?php esc_html_e( 'Dependency Minification', 'dependency-minification' ) ?></h2>
 			<h2 class="nav-tab-wrapper">
-				<a href="#tab-status" class="nav-tab nav-tab-active"><?php esc_html_e( 'Status', 'depmin' ) ?></a>
-				<a href="#tab-settings" class="nav-tab"><?php esc_html_e( 'Settings', 'depmin' ) ?></a>
+				<a href="#tab-status" class="nav-tab nav-tab-active"><?php esc_html_e( 'Status', 'dependency-minification' ) ?></a>
+				<a href="#tab-settings" class="nav-tab"><?php esc_html_e( 'Settings', 'dependency-minification' ) ?></a>
 			</h2>
 			<div class="nav-tab-content" id="tab-content-status">
 			<form action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ) ?>" method="post">
@@ -385,21 +385,21 @@ class Dependency_Minification {
 
 				<?php if ( self::$options['disable_if_wp_debug'] && ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ): ?>
 					<div class="error">
-						<p><?php esc_html_e( 'Dependency Minification is disabled. Any minified dependencies below are cached. To minify new dependencies, disable WP_DEBUG or filter disable_if_wp_debug to be false.', 'depmin' ); ?></p>
+						<p><?php esc_html_e( 'Dependency Minification is disabled. Any minified dependencies below are cached. To minify new dependencies, disable WP_DEBUG or filter disable_if_wp_debug to be false.', 'dependency-minification' ); ?></p>
 					</div>
 				<?php endif; ?>
 
 				<?php if ( empty( $minified_dependencies ) ) : ?>
 					<p>
-						<em><?php esc_html_e( 'There are no minified dependencies yet. Try browsing the site.', 'depmin' ); ?></em>
+						<em><?php esc_html_e( 'There are no minified dependencies yet. Try browsing the site.', 'dependency-minification' ); ?></em>
 					</p>
 				<?php else : ?>
 					<div class="tablenav top">
 						<div class="alignleft actions">
 							<select name="depmin_task">
 								<option value="-1" selected="selected"><?php esc_html_e( 'Bulk Actions' ) ?></option>
-								<option value="expire"><?php esc_html_e( 'Expire', 'depmin' ) ?></option>
-								<option value="purge"><?php esc_html_e( 'Purge', 'depmin' ) ?></option>
+								<option value="expire"><?php esc_html_e( 'Expire', 'dependency-minification' ) ?></option>
+								<option value="purge"><?php esc_html_e( 'Purge', 'dependency-minification' ) ?></option>
 							</select>
 							<input type="submit" name="" id="doaction" class="button action" value="<?php esc_attr_e( 'Apply' ) ?>">
 						</div>
@@ -413,12 +413,12 @@ class Dependency_Minification {
 									<th scope="col" class="manage-column column-cb check-column">
 										<label class="screen-reader-text" for="cb-select-all-1"><?php esc_html_e( 'Select All' ) ?></label><input id="cb-select-all-<?php echo esc_attr( $i + 1 ); ?>" type="checkbox">
 									</th>
-									<th scope="col" class="manage-column column-dependencies"><?php esc_html_e( 'Dependencies', 'depmin' ) ?></th>
-									<th scope="col" class="manage-column column-count"><?php esc_html_e( 'Count', 'depmin' ) ?></th>
-									<th scope="col" class="manage-column column-compression"><?php esc_html_e( 'Compression', 'depmin' ) ?></th>
-									<th scope="col" class="manage-column column-type"><?php esc_html_e( 'Type', 'depmin' ) ?></th>
-									<th scope="col" class="manage-column column-last-modified"><?php esc_html_e( 'Last Modified', 'depmin' ) ?></th>
-									<th scope="col" class="manage-column column-expires"><?php esc_html_e( 'Expires', 'depmin' ) ?></th>
+									<th scope="col" class="manage-column column-dependencies"><?php esc_html_e( 'Dependencies', 'dependency-minification' ) ?></th>
+									<th scope="col" class="manage-column column-count"><?php esc_html_e( 'Count', 'dependency-minification' ) ?></th>
+									<th scope="col" class="manage-column column-compression"><?php esc_html_e( 'Compression', 'dependency-minification' ) ?></th>
+									<th scope="col" class="manage-column column-type"><?php esc_html_e( 'Type', 'dependency-minification' ) ?></th>
+									<th scope="col" class="manage-column column-last-modified"><?php esc_html_e( 'Last Modified', 'dependency-minification' ) ?></th>
+									<th scope="col" class="manage-column column-expires"><?php esc_html_e( 'Expires', 'dependency-minification' ) ?></th>
 								</tr>
 							</<?php echo $tcontainer;  // xss ok ?>>
 						<?php endforeach; ?>
@@ -437,13 +437,13 @@ class Dependency_Minification {
 								?>
 								<tr id="<?php echo esc_attr( $option_name ) ?>" valign="top">
 									<th scope="row" class="check-column">
-										<label class="screen-reader-text" for="cb-select-<?php echo esc_attr( $option_name ) ?>"><?php esc_html_e( 'Select minified dependency', 'depmin' ) ?></label>
+										<label class="screen-reader-text" for="cb-select-<?php echo esc_attr( $option_name ) ?>"><?php esc_html_e( 'Select minified dependency', 'dependency-minification' ) ?></label>
 										<input id="cb-select-<?php echo esc_attr( $option_name ) ?>" type="checkbox" name="depmin_option_name[]" value="<?php echo esc_attr( $option_name ) ?>" <?php disabled( $pending ) ?>>
 									</th>
 									<td class="column-dependencies">
 										<strong>
 											<?php for ( $i = 0; $i < count( $deps ); $i += 1 ) : ?>
-												<a href="<?php echo esc_url( $deps[$i]['src'] ) ?>" target="_blank" title="<?php esc_attr_e( 'View unminified source (opens in new window)', 'depmin' ) ?>"><?php echo esc_html( $deps[$i]['handle'] ) ?></a><?php if ( $i + 1 < count( $handles ) ) { esc_html_e( ', ' ); } ?>
+												<a href="<?php echo esc_url( $deps[$i]['src'] ) ?>" target="_blank" title="<?php esc_attr_e( 'View unminified source (opens in new window)', 'dependency-minification' ) ?>"><?php echo esc_html( $deps[$i]['handle'] ) ?></a><?php if ( $i + 1 < count( $handles ) ) { esc_html_e( ', ' ); } ?>
 											<?php endfor; ?>
 										</strong>
 										<?php if ( ! empty( $error ) ) : ?>
@@ -455,8 +455,8 @@ class Dependency_Minification {
 														$_link_params = $link_params;
 														$_link_params['depmin_task'] = 'purge';
 														?>
-														<a class="submitdelete" title="<?php esc_attr_e( 'Delete the cached error to try again.', 'depmin' ) ?>" href="<?php echo esc_url( add_query_arg( $_link_params, admin_url( 'admin-ajax.php' ) ) ) ?>">
-															<?php esc_html_e( 'Try again', 'depmin' ) ?>
+														<a class="submitdelete" title="<?php esc_attr_e( 'Delete the cached error to try again.', 'dependency-minification' ) ?>" href="<?php echo esc_url( add_query_arg( $_link_params, admin_url( 'admin-ajax.php' ) ) ) ?>">
+															<?php esc_html_e( 'Try again', 'dependency-minification' ) ?>
 														</a>
 													</span>
 												</p>
@@ -470,17 +470,17 @@ class Dependency_Minification {
 														$_link_params = $link_params;
 														$_link_params['depmin_task'] = 'expire';
 														?>
-														<a href="<?php echo esc_url( add_query_arg( $_link_params, admin_url( 'admin-ajax.php' ) ) ) ?>" title="<?php esc_attr_e( 'Expire this item to gracefully regenerate', 'depmin' ) ?>"><?php esc_html_e( 'Expire', 'depmin' ) ?></a> |
+														<a href="<?php echo esc_url( add_query_arg( $_link_params, admin_url( 'admin-ajax.php' ) ) ) ?>" title="<?php esc_attr_e( 'Expire this item to gracefully regenerate', 'dependency-minification' ) ?>"><?php esc_html_e( 'Expire', 'dependency-minification' ) ?></a> |
 													</span>
 													<span class="trash">
 														<?php
 														$_link_params = $link_params;
 														$_link_params['depmin_task'] = 'purge';
 														?>
-														<a class="submitdelete" title="<?php esc_attr_e( 'Purge item from cache (delete immediately; NOT recommended)', 'depmin' ) ?>" href="<?php echo esc_url( add_query_arg( $_link_params, admin_url( 'admin-ajax.php' ) ) ) ?>"><?php esc_html_e( 'Purge', 'depmin' ) ?></a> |
+														<a class="submitdelete" title="<?php esc_attr_e( 'Purge item from cache (delete immediately; NOT recommended)', 'dependency-minification' ) ?>" href="<?php echo esc_url( add_query_arg( $_link_params, admin_url( 'admin-ajax.php' ) ) ) ?>"><?php esc_html_e( 'Purge', 'dependency-minification' ) ?></a> |
 													</span>
 													<span class="view">
-														<a href="<?php echo esc_url( $minified_src ) ?>" target="_blank" title="<?php esc_attr_e( 'View minified dependencies (opens in new window)', 'depmin' ) ?>" rel="permalink"><?php esc_html_e( 'View minified', 'depmin' ) ?></a>
+														<a href="<?php echo esc_url( $minified_src ) ?>" target="_blank" title="<?php esc_attr_e( 'View minified dependencies (opens in new window)', 'dependency-minification' ) ?>" rel="permalink"><?php esc_html_e( 'View minified', 'dependency-minification' ) ?></a>
 													</span>
 												<?php else : ?>
 													<span class="trash">
@@ -488,7 +488,7 @@ class Dependency_Minification {
 														$_link_params = $link_params;
 														$_link_params['depmin_task'] = 'purge';
 														?>
-														<a class="submitdelete" title="<?php esc_attr_e( 'Delete the cached error to try again.', 'depmin' ) ?>" href="<?php echo esc_url( add_query_arg( $_link_params, admin_url( 'admin-ajax.php' ) ) ) ?>"><?php esc_html_e( 'Try again', 'depmin' ) ?></a>
+														<a class="submitdelete" title="<?php esc_attr_e( 'Delete the cached error to try again.', 'dependency-minification' ) ?>" href="<?php echo esc_url( add_query_arg( $_link_params, admin_url( 'admin-ajax.php' ) ) ) ?>"><?php esc_html_e( 'Try again', 'dependency-minification' ) ?></a>
 													</span>
 												<?php endif; ?>
 											</div>
@@ -497,13 +497,13 @@ class Dependency_Minification {
 									<td class="count column-count"><?php echo esc_html( count( $handles ) ) ?></td>
 									<td class="count column-compression"><?php
 										if ( empty( $unminified_size ) ) {
-											esc_html_e( 'N/A', 'depmin' );
+											esc_html_e( 'N/A', 'dependency-minification' );
 										} else {
 											$min = strlen( $contents );
 											$max = $unminified_size;
 											$percentage = round( 100 - ( $min / $max ) * 100 );
-											printf( '<meter min=0 max=100 value="%d" title="%s">', $percentage, esc_attr( sprintf( __( '(%1$d / %2$d)', 'depmin' ), $min, $max ) ) );
-											print esc_html( sprintf( __( '%1$d%%', 'depmin' ), $percentage ) );
+											printf( '<meter min=0 max=100 value="%d" title="%s">', $percentage, esc_attr( sprintf( __( '(%1$d / %2$d)', 'dependency-minification' ), $min, $max ) ) );
+											print esc_html( sprintf( __( '%1$d%%', 'dependency-minification' ), $percentage ) );
 											print '</meter>';
 										}
 
@@ -518,7 +518,7 @@ class Dependency_Minification {
 									<?php foreach ( $date_cols as $col => $time ) : ?>
 										<td class="<?php echo esc_attr( $col ) ?> column-<?php echo esc_attr( $col ) ?>">
 											<?php if ( $pending ) : ?>
-												<em><?php esc_html_e( '(Pending)', 'depmin' ) ?></em>
+												<em><?php esc_html_e( '(Pending)', 'dependency-minification' ) ?></em>
 											<?php else : ?>
 												<time title="<?php echo esc_attr( gmdate( 'c', $time ) ) ?>" datetime="<?php echo esc_attr( gmdate( 'c', $time ) ) ?>">
 													<?php if ( $time < time() ) : ?>
@@ -547,8 +547,8 @@ class Dependency_Minification {
 					<table class="widefat">
 						<tbody>
 							<tr>
-								<th><?php esc_html_e( 'Disable minification', 'depmin' ) ?>
-									<small><?php esc_html_e( 'Disable the plugin\'s functionality completely', 'depmin' ) ?></small></th>
+								<th><?php esc_html_e( 'Disable minification', 'dependency-minification' ) ?>
+									<small><?php esc_html_e( 'Disable the plugin\'s functionality completely', 'dependency-minification' ) ?></small></th>
 								<td>
 									<label for="options[disabled_on_conditions][all]">
 										<input type="checkbox" name="options[disabled_on_conditions][all]" id="options[disabled_on_conditions][all]" <?php checked( self::$options['disabled_on_conditions']['all'] ) ?> value="1">
@@ -556,8 +556,8 @@ class Dependency_Minification {
 								</td>
 							</tr>
 							<tr>
-								<th><?php esc_html_e( 'Exclude remote dependencies', 'depmin' ) ?>
-									<small><?php esc_html_e( 'Makes the default is to exclude remote dependencies', 'depmin' ) ?></small></th>
+								<th><?php esc_html_e( 'Exclude remote dependencies', 'dependency-minification' ) ?>
+									<small><?php esc_html_e( 'Makes the default is to exclude remote dependencies', 'dependency-minification' ) ?></small></th>
 								<td>
 									<label for="options[default_exclude_remote_dependencies]">
 										<input type="checkbox" name="options[default_exclude_remote_dependencies]" id="options[default_exclude_remote_dependencies]" <?php checked( self::$options['default_exclude_remote_dependencies'] ) ?> value="1">
@@ -565,34 +565,34 @@ class Dependency_Minification {
 								</td>
 							</tr>
 							<tr>
-								<th><?php esc_html_e( 'Disable minification for:', 'depmin' ) ?>
-									<small><?php esc_html_e( 'Select conditions where minification should not happen', 'depmin' ) ?></small></th>
+								<th><?php esc_html_e( 'Disable minification for:', 'dependency-minification' ) ?>
+									<small><?php esc_html_e( 'Select conditions where minification should not happen', 'dependency-minification' ) ?></small></th>
 								<td>
 									<label for="options[disabled_on_conditions][loggedin]">
 										<input type="checkbox" name="options[disabled_on_conditions][loggedin]" id="options[disabled_on_conditions][loggedin]" <?php checked( self::$options['disabled_on_conditions']['loggedin'] ) ?> value="1">
-										<?php esc_html_e( 'Logged in Users', 'depmin' ) ?>
+										<?php esc_html_e( 'Logged in Users', 'dependency-minification' ) ?>
 									</label>
 									<label for="options[disabled_on_conditions][admin]">
 										<input type="checkbox" name="options[disabled_on_conditions][admin]" id="options[disabled_on_conditions][admin]" <?php checked( self::$options['disabled_on_conditions']['admin'] ) ?> value="1">
-										<?php esc_html_e( 'Administrators', 'depmin' ) ?>
+										<?php esc_html_e( 'Administrators', 'dependency-minification' ) ?>
 									</label>
 									<label for="options[disabled_on_conditions][queryvar][enabled]">
 										<input type="checkbox" name="options[disabled_on_conditions][queryvar][enabled]" id="options[disabled_on_conditions][queryvar][enabled]" <?php checked( self::$options['disabled_on_conditions']['queryvar']['enabled'] ) ?> value="1">
-										<?php esc_html_e( 'Query Variable', 'depmin' ) ?>
+										<?php esc_html_e( 'Query Variable', 'dependency-minification' ) ?>
 										<input type="text" name="options[disabled_on_conditions][queryvar][value]" id="options[disabled_on_conditions][queryvar][value]" value="<?php echo esc_html( self::$options['disabled_on_conditions']['queryvar']['value'] ) ?>">
 									</label>
 								</td>
 							</tr>
 							<tr>
-								<th><?php esc_html_e( 'Exclude resources', 'depmin' ) ?>
-									<small><?php esc_html_e( 'Add URLs of resources to exclude from minification, one resource per line. Note that you can just add a script name, or the last portion of the URL so it matches.', 'depmin' ) ?></small></th>
+								<th><?php esc_html_e( 'Exclude resources', 'dependency-minification' ) ?>
+									<small><?php esc_html_e( 'Add URLs of resources to exclude from minification, one resource per line. Note that you can just add a script name, or the last portion of the URL so it matches.', 'dependency-minification' ) ?></small></th>
 								<td><textarea name="options[exclude_dependencies]" id="options[exclude_dependencies]" rows="10" class="widefat"><?php echo esc_html( implode( "\n", self::$options['exclude_dependencies'] ) ) ?></textarea></td>
 							</tr>
 						</tbody>
 						<tfoot>
 							<tr>
 								<td colspan="2">
-									<input type="submit" value="<?php esc_html_e( 'Submit', 'depmin' ) ?>" class="alignright button button-primary">
+									<input type="submit" value="<?php esc_html_e( 'Submit', 'dependency-minification' ) ?>" class="alignright button button-primary">
 								</td>
 							</tr>
 						</tfoot>
@@ -960,7 +960,7 @@ class Dependency_Minification {
 			foreach ( $srcs as $src ) {
 
 				if ( ! preg_match( '|^(https?:)?//|', $src ) ) {
-					$src = site_url( $src ); 
+					$src = site_url( $src );
 				}
 
 				// First attempt to get the file from the filesystem
