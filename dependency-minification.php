@@ -291,7 +291,7 @@ class Dependency_Minification {
 
 		$redirect_url = add_query_arg( 'page', self::ADMIN_PAGE_SLUG, admin_url( self::ADMIN_PARENT_PAGE ) );
 		$redirect_url = add_query_arg( 'updated-count', $updated_count, $redirect_url );
-		$redirect_url = add_query_arg( 'updated-action', esc_attr( $_REQUEST['depmin_task'] ), $redirect_url );
+		$redirect_url = add_query_arg( 'updated-action', $_REQUEST['depmin_task'], $redirect_url );
 		wp_redirect( $redirect_url );
 		exit;
 	}
