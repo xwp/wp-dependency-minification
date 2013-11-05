@@ -236,8 +236,8 @@ class Dependency_Minification {
 			return;
 		}
 
-		$updated_count = intval( $_REQUEST['updated-count'] );
-		$updated_task = sanitize_title( $_REQUEST['updated-action'] );
+		$updated_count = intval( $_GET['updated-count'] );
+		$updated_task = filter_input( INPUT_GET, 'updated-action' );
 		?>
 		<div class="updated">
 			<?php if ( 'expire' === $updated_task ) : ?>
@@ -272,7 +272,7 @@ class Dependency_Minification {
 		if ( ! current_user_can( self::$options['admin_page_capability'] ) ) {
 			wp_die( __( 'You are not allowed to do that.', 'dependency-minification' ) );
 		}
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], self::AJAX_ACTION ) ) {
+		if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], self::AJAX_ACTION ) ) {
 			wp_die( __( 'Nonce check failed. Try reloading the previous page.', 'dependency-minification' ) );
 		}
 		$updated_count = 0;
@@ -303,14 +303,16 @@ class Dependency_Minification {
 		if ( ! current_user_can( self::$options['admin_page_capability'] ) ) {
 			wp_die( __( 'You are not allowed to do that.', 'dependency-minification' ) );
 		}
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], self::AJAX_OPTIONS_ACTION ) ) {
+		if ( ! isset( $_POST['_wpnonce']) || ! wp_verify_nonce( $_POST['_wpnonce'], self::AJAX_OPTIONS_ACTION ) ) {
 			wp_die( __( 'Nonce check failed. Try reloading the previous page.', 'dependency-minification' ) );
 		}
 		$updated_count = 0;
 		if ( ! empty( $_POST['options'] ) ) {
 			$options = get_option( 'dependency_minification_options' );
-			$options['exclude_dependencies']   = array_filter( preg_split( "#[\n\r]+#", $_POST['options']['exclude_dependencies'] ) );
-			$options['disabled_on_conditions'] = $_POST['options']['disabled_on_conditions'];
+			$options['exclude_dependencies']   = array_filter( preg_split( "#[\n\r]+#", esc_attr( $_POST['options']['exclude_dependencies'] ) ) );
+			$options['disabled_on_conditions'] = ( isset( $_POST['options']['disabled_on_conditions'] ) )
+												? $_POST['options']['disabled_on_conditions']
+												: array();
 			$options['default_exclude_remote_dependencies'] = isset( $_POST['options']['default_exclude_remote_dependencies'] );
 			update_option( 'dependency_minification_options', $options );
 		}
