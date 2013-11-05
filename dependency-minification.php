@@ -237,7 +237,7 @@ class Dependency_Minification {
 		}
 
 		$updated_count = intval( $_GET['updated-count'] );
-		$updated_task = esc_html( $_GET['updated-action'] );
+		$updated_task = filter_input( INPUT_GET, 'updated-action' );
 		?>
 		<div class="updated">
 			<?php if ( 'expire' === $updated_task ) : ?>
