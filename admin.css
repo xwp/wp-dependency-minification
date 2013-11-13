@@ -14,3 +14,16 @@
 .fixed .column-expires {
 	width: 12%;
 }
+
+.nav-tab-content {
+	display: none;
+}
+.form-table th small {
+	display: block;
+	clear: both;
+	color: #999;
+}
+.form-table td label {
+	display: block;
+	clear:both;
+}
