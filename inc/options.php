@@ -48,13 +48,16 @@ class DepMin_Options extends ArrayObject {
 	 * @return bool
 	 * @since 1.0
 	 */
-	protected function set_options( array $options ) {
+	protected function set_options( $options ) {
+		if ( ! is_array( $options ) ) {
+			return false;
+		}
 		return update_option( 'dependency_minification_options', $options );
 	}
 
 	/*** ArrayObject Methods **************************************************/
 
-	public function exchangeArray( array $input ) {
+	public function exchangeArray( $input ) {
 		if ( $this->set_options( $input ) ) {
 			return parent::exchangeArray( $input );
 		}

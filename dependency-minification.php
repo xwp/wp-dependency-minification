@@ -29,7 +29,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) OR exit;
 
 /**
  * Main Dependency Minification plugin class.
@@ -115,8 +115,8 @@ class Dependency_Minification {
 	 */
 	private function setup() {
 
-		self::$options = new DepMin_Options();
-		self::$handler = new DepMin_Handler();
+		self::$options   = new DepMin_Options();
+		self::$handler	 = new DepMin_Handler();
 		self::$collation = new DepMin_Collation();
 
 		if ( is_admin() ) {
@@ -144,8 +144,9 @@ class Dependency_Minification {
 	 */
 	public static function get_rewrite_regex() {
 
-		if ( is_null( self::$options ) )
+		if ( is_null( self::$options ) ) {
 			self::$options = new DepMin_Options();
+		}
 
 		return self::$options['endpoint'] . '/([^/]+?)\.([0-9a-f]+)(?:\.([0-9a-f]+))?\.(css|js)';
 	}
@@ -156,10 +157,10 @@ class Dependency_Minification {
 	 */
 	public static function add_rewrite_rules() {
 
-		// Get the rewrite regex.
-		$regex    = self::get_rewrite_regex();
-
 		$redirect = 'index.php?';
+
+		// Get the rewrite regex.
+		$regex = self::get_rewrite_regex();
 
 		for ( $i = 0; $i < count( self::$query_vars ); $i += 1 ) {
 			$redirect .= sprintf( '%s=$matches[%d]&', self::$query_vars[$i], $i + 1 );
@@ -238,10 +239,11 @@ class Dependency_Minification {
 
 		$base = plugin_dir_path( __FILE__ );
 
-		if ( ! empty( $path ) )
+		if ( ! empty( $path ) ) {
 			$path = path_join( $base, $path );
-		else
+		} else {
 			$path = untrailingslashit( $base );
+		}
 
 		return $path;
 	}

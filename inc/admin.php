@@ -39,7 +39,6 @@ class DepMin_Admin {
 	 */
 	protected $page_hook;
 
-
 	/*** Methods **************************************************************/
 
 	/**
@@ -109,7 +108,7 @@ class DepMin_Admin {
 	 */
 	public function page_tab_content_status() {
 
-		$nonce = wp_create_nonce( self::AJAX_ACTION ) ?>
+		$nonce = wp_create_nonce( self::AJAX_ACTION ); ?>
 
 		<div class="nav-tab-content" id="tab-content-status">
 
