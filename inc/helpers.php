@@ -25,14 +25,17 @@ class DepMin_SrcInfo {
 	 */
 	public function __construct( $url, $path = '' ) {
 
-		if ( ! empty( $url ) )
+		if ( ! empty( $url ) ) {
 			$this->set_url( $url );
+		}
 
-		if ( ! empty( $path ) )
+		if ( ! empty( $path ) ) {
 			$this->set_path( $path );
+		}
 
-		if ( empty( $url ) && empty( $path ) )
+		if ( empty( $url ) && empty( $path ) ) {
 			throw new DepMin_Exception( 'Specific the file path or URL' );
+		}
 
 	}
 
@@ -49,11 +52,13 @@ class DepMin_SrcInfo {
 
 			$parsed_url = parse_url( $url );
 
-			if ( empty( $parsed_url['host'] ) && substr( $parsed_url['path'], 0, 1 ) === '/' )
+			if ( empty( $parsed_url['host'] ) && substr( $parsed_url['path'], 0, 1 ) === '/' ) {
 				return true;
+			}
 
-			if ( ! empty( $parsed_url['host'] ) && $parsed_url['host'] === parse_url( get_site_url(), PHP_URL_HOST ) )
+			if ( ! empty( $parsed_url['host'] ) && $parsed_url['host'] === parse_url( get_site_url(), PHP_URL_HOST ) ) {
 				return true;
+			}
 
 		}
 
@@ -71,8 +76,9 @@ class DepMin_SrcInfo {
 		$url = $this->get_url();
 		$path = $this->get_path();
 
-		if ( ! empty( $path ) )
+		if ( ! empty( $path ) ) {
 			$contents = file_get_contents( $path );
+		}
 
 		if ( false === $contents && ! empty( $url ) ) {
 
@@ -104,8 +110,9 @@ class DepMin_SrcInfo {
 		}
 
 		// Remove the BOM
-		if ( ! empty( $contents ) )
+		if ( ! empty( $contents ) ) {
 			$contents = preg_replace( "/^\xEF\xBB\xBF/", '', $contents );
+		}
 
 		return $contents;
 	}
@@ -117,8 +124,9 @@ class DepMin_SrcInfo {
 	 */
 	protected function set_path( $path ) {
 
-		if ( ! file_exists( $path ) )
+		if ( ! file_exists( $path ) ) {
 			throw new DepMin_Exception( 'Invalid file path' );
+		}
 
 		$this->path = $path;
 
@@ -131,8 +139,9 @@ class DepMin_SrcInfo {
 	 */
 	protected function set_url( $url ) {
 
-		if ( ! DepMin_is_vaild_url( $url ) )
+		if ( ! DepMin_is_vaild_url( $url ) ) {
 			throw new DepMin_Exception( 'Invalid file URL' );
+		}
 
 		$this->url = $url;
 

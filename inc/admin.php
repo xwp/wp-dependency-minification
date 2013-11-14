@@ -424,8 +424,9 @@ class DepMin_Admin {
 
 				$key = sanitize_key( $key );
 
-				if ( empty( $key ) )
+				if ( empty( $key ) ) {
 					continue;
+				}
 
 				$key = DepMin_Cache::get_key( $key );
 
@@ -502,8 +503,9 @@ class DepMin_Admin {
 	 */
 	public function enqueue_scripts( $hook ) {
 
-		if ( $hook !== $this->page_hook )
+		if ( $hook !== $this->page_hook ) {
 			return;
+		}
 
 		wp_enqueue_style( 'depmin-admin', Dependency_Minification::url( 'admin.css' ), array(), Dependency_Minification::VERSION );
 		wp_enqueue_script( 'depmin-admin', Dependency_Minification::url( 'admin.js' ), array( 'jquery' ), Dependency_Minification::VERSION );
@@ -538,14 +540,17 @@ class DepMin_Admin {
 			<?php
 		}
 
-		if ( get_current_screen()->id !== $this->page_hook )
+		if ( get_current_screen()->id !== $this->page_hook ) {
 			return;
+		}
 
-		if ( empty( $_GET['updated-action'] ) )
+		if ( empty( $_GET['updated-action'] ) ) {
 			return;
+		}
 
-		if ( empty( $_GET['updated-count'] ) )
+		if ( empty( $_GET['updated-count'] ) ) {
 			return;
+		}
 
 		$updated_count = intval( $_GET['updated-count'] );
 		$updated_task = filter_input( INPUT_GET, 'updated-action' );

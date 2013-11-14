@@ -43,8 +43,9 @@ abstract class DepMin_Minifier {
 
 		foreach( $srcs as $src ) {
 
-			if ( ! is_a( $src, 'DepMin_SrcInfo' ) )
+			if ( ! is_a( $src, 'DepMin_SrcInfo' ) ) {
 				$src = new DepMin_SrcInfo( $src );
+			}
 
 			$this->srcs[]= $src;
 
@@ -61,8 +62,9 @@ abstract class DepMin_Minifier {
 
 		if ( ! empty( $key ) ) {
 
-			if ( isset( $this->args[ $key ] ) )
+			if ( isset( $this->args[ $key ] ) ) {
 				return $this->args[ $key ];
+			}
 
 			return false;
 
@@ -247,18 +249,18 @@ class DepMin_Minify {
 		try {
 
 			foreach( $srcs as &$src ) {
-
-				if ( ! preg_match( '|^(https?:)?//|', $src ) )
-					$src = site_url( $src );
-
+				if ( ! preg_match( '|^(https?:)?//|', $src ) ) {
+					$src = site_url($src);
+				}
 			}
 
 			if ( ( $minified = DepMin_Minify::minify( $srcs, $args['type'] ) ) ) {
 
 				$args['contents'] = "/*! This minified dependency bundle includes:\n";
 
-				foreach ( $srcs as $key => $src )
+				foreach ( $srcs as $key => $src ) {
 					$args['contents'] .= sprintf( " * %02d. %s\n", $key + 1, $src );
+				}
 
 				$args['contents'] .= " */\n\n" . $minified['contents'];
 				$args['unminified_size'] = $minified['unminified_size'];
@@ -337,12 +339,10 @@ class DepMin_Minify {
 		foreach ( _get_cron_array() as $cron ) {
 			if ( isset( $cron[ self::CRON_ACTION ] ) ) {
 				foreach ( $cron[ self::CRON_ACTION ] as $event ) {
-
 					$data = reset( $event['args'] );
-
-					if ( ! empty( $data['pending'] ) )
+					if ( ! empty( $data['pending'] ) ) {
 						$list[] = $data;
-
+					}
 				}
 			}
 		}

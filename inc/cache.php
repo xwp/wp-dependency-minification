@@ -79,10 +79,9 @@ class DepMin_Cache {
 	 * @since 1.0
 	 */
 	public static function set_object( $object ) {
-
-		if ( $object instanceof DepMin_Cache_Interface )
+		if ( $object instanceof DepMin_Cache_Interface ) {
 			self::$object = $object;
-
+		}
 	}
 
 	/**
@@ -90,12 +89,11 @@ class DepMin_Cache {
 	 * @since 1.0
 	 */
 	public static function get_object() {
-
-		if ( is_null( self::$object ) )
+		if ( is_null( self::$object ) ) {
 			self::$object = new DepMin_Cache_Default();
+		}
 
 		return self::$object;
-
 	}
 
 }
@@ -115,10 +113,9 @@ class DepMin_Cache_Default implements DepMin_Cache_Interface {
 		$list = array();
 
 		foreach ( $wpdb->get_col( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE 'depmin_cache_%'" ) as $key ) {
-
-			if ( ( $value = get_option( $key ) ) )
+			if ( ( $value = get_option( $key ) ) ) {
 				$list[ $key ] = $value;
-
+			}
 		}
 
 		return $list;
@@ -130,6 +127,10 @@ class DepMin_Cache_Default implements DepMin_Cache_Interface {
 	 */
 	public function get_key( $key ) {
 
+		if ( empty( $key ) ) {
+			return false;
+		}
+
 		if ( is_array( $key ) ) {
 			$key = DepMin_hash_array( $key );
 
@@ -137,9 +138,6 @@ class DepMin_Cache_Default implements DepMin_Cache_Interface {
 			$key = spl_object_hash( $key );
 
 		}
-
-		if ( empty( $key ) )
-			return false;
 
 		return 'depmin_cache_' . trim( $key );
 	}
@@ -152,8 +150,9 @@ class DepMin_Cache_Default implements DepMin_Cache_Interface {
 
 		$key = trim( $key );
 
-		if ( empty( $key ) )
+		if ( empty( $key ) ) {
 			return false;
+		}
 
 		if ( ! $this->exists( $key ) ) {
 			return $this->add( $key, $value );
@@ -170,9 +169,9 @@ class DepMin_Cache_Default implements DepMin_Cache_Interface {
 	 * @since 1.0
 	 */
 	public function add( $key, $value ) {
-
-		if ( empty( $key ) || $this->exists( $key ) )
+		if ( empty( $key ) || $this->exists( $key ) ) {
 			return false;
+		}
 
 		return add_option( $key, $value, '', 'no' );
 	}
@@ -182,9 +181,9 @@ class DepMin_Cache_Default implements DepMin_Cache_Interface {
 	 * @since 1.0
 	 */
 	public function replace( $key, $value ) {
-
-		if ( empty( $key ) || ! $this->exists( $key ) )
+		if ( empty( $key ) || ! $this->exists( $key ) ) {
 			return false;
+		}
 
 		return update_option( $key, $value );
 	}

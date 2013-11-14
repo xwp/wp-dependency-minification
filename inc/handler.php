@@ -23,8 +23,9 @@ class DepMin_Handler {
 		$ext = get_query_var( 'depmin_file_ext' );
 		$src_hash = get_query_var( 'depmin_src_hash' );
 
-		if ( empty( $src_hash ) || empty( $ext ) )
+		if ( empty( $src_hash ) || empty( $ext ) ) {
 			return;
+		}
 
 		try {
 			ob_start();

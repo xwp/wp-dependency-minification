@@ -55,30 +55,27 @@ class DepMin_Options extends ArrayObject {
 	/*** ArrayObject Methods **************************************************/
 
 	public function exchangeArray( array $input ) {
-
-		if ( $this->set_options( $input ) )
+		if ( $this->set_options( $input ) ) {
 			return parent::exchangeArray( $input );
-
+		}
 	}
 
 	public function offsetSet( $index, $newval ) {
-
 		$options = $this->get_options();
 		$options[ $index ] = $newval;
 
-		if ( $this->set_options( $options ) )
+		if ( $this->set_options($options) ) {
 			parent::offsetSet( $index, $newval );
-
+		}
 	}
 
 	public function offsetUnset( $index ) {
-
 		$options = $this->get_options();
 		unset( $options[ $index ] );
 
-		if ( $this->set_options( $options ) )
+		if ( $this->set_options( $options ) ) {
 			parent::offsetUnset( $index );
-
+		}
 	}
 
 }
