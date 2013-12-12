@@ -398,7 +398,7 @@ class Dependency_Minification {
 														$_link_params = $link_params;
 														$_link_params['depmin_task'] = 'purge';
 														?>
-														<a class="submitdelete" title="<?php esc_attr_e( 'Delete the cached error to try again.', 'depmin' ) ?>" href="<?php echo esc_url( add_query_arg( $_link_params, admin_url( 'admin-ajax.php' ) ) ) ?>">
+														<a class="submitdelete" title="<?php esc_attr_e( 'Delete the cached error to try again.', 'depmin' ) ?>" href="<?php echo esc_url( admin_url( 'admin-ajax.php' ) . '?' . http_build_query( $_link_params ) ) ?>">
 															<?php esc_html_e( 'Try again', 'dependency-minification' ) ?>
 														</a>
 													</span>
@@ -413,14 +413,14 @@ class Dependency_Minification {
 														$_link_params = $link_params;
 														$_link_params['depmin_task'] = 'expire';
 														?>
-														<a href="<?php echo esc_url( add_query_arg( $_link_params, admin_url( 'admin-ajax.php' ) ) ) ?>" title="<?php esc_attr_e( 'Expire this item to gracefully regenerate', 'dependency-minification' ) ?>"><?php esc_html_e( 'Expire', 'dependency-minification' ) ?></a> |
+														<a href="<?php echo esc_url( admin_url( 'admin-ajax.php' ) . '?' . http_build_query( $_link_params ) ) ?>" title="<?php esc_attr_e( 'Expire this item to gracefully regenerate', 'dependency-minification' ) ?>"><?php esc_html_e( 'Expire', 'dependency-minification' ) ?></a> |
 													</span>
 													<span class="trash">
 														<?php
 														$_link_params = $link_params;
 														$_link_params['depmin_task'] = 'purge';
 														?>
-														<a class="submitdelete" title="<?php esc_attr_e( 'Purge item from cache (delete immediately; NOT recommended)', 'dependency-minification' ) ?>" href="<?php echo esc_url( add_query_arg( $_link_params, admin_url( 'admin-ajax.php' ) ) ) ?>"><?php esc_html_e( 'Purge', 'dependency-minification' ) ?></a> |
+														<a class="submitdelete" title="<?php esc_attr_e( 'Purge item from cache (delete immediately; NOT recommended)', 'dependency-minification' ) ?>" href="<?php echo esc_url( admin_url( 'admin-ajax.php' ) . '?' . http_build_query( $_link_params ) ) ?>"><?php esc_html_e( 'Purge', 'dependency-minification' ) ?></a> |
 													</span>
 													<span class="view">
 														<a href="<?php echo esc_url( $minified_src ) ?>" target="_blank" title="<?php esc_attr_e( 'View minified dependencies (opens in new window)', 'dependency-minification' ) ?>" rel="permalink"><?php esc_html_e( 'View minified', 'dependency-minification' ) ?></a>
@@ -431,7 +431,7 @@ class Dependency_Minification {
 														$_link_params = $link_params;
 														$_link_params['depmin_task'] = 'purge';
 														?>
-														<a class="submitdelete" title="<?php esc_attr_e( 'Delete the cached error to try again.', 'dependency-minification' ) ?>" href="<?php echo esc_url( add_query_arg( $_link_params, admin_url( 'admin-ajax.php' ) ) ) ?>"><?php esc_html_e( 'Try again', 'dependency-minification' ) ?></a>
+														<a class="submitdelete" title="<?php esc_attr_e( 'Delete the cached error to try again.', 'dependency-minification' ) ?>" href="<?php echo esc_url( admin_url( 'admin-ajax.php' ) . '?' . http_build_query( $_link_params ) ) ?>"><?php esc_html_e( 'Try again', 'dependency-minification' ) ?></a>
 													</span>
 												<?php endif; ?>
 											</div>
