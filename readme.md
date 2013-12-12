@@ -5,9 +5,43 @@ wp-plugin-dev-lib
 
 It is intended that this repo be included in plugin repo via git-subtree/submodule in a `bin/` directory.
 
-Symlink to `pre-commit` from your project's `.git/hooks/pre-commit`
+To **add** it to your repo, do:
 
-Includes a WordPress README [parser](class-wordpress-readme-parser.php) and [converter](generate-markdown-readme) to Markdown,
+```bash
+git subtree add --prefix bin \
+  git@github.com:x-team/wp-plugin-dev-lib.git master --squash
+```
+
+To **update** the library with the latest changes:
+
+```bash
+git subtree pull --prefix bin \
+  git@github.com:x-team/wp-plugin-dev-lib.git master --squash
+```
+
+And if you have changes you want to **upstream**, do:
+
+```bash
+git subtree push --prefix bin \
+  git@github.com:x-team/wp-plugin-dev-lib.git master
+```
+
+Symlink to the `.travis.yml`, `.jshintrc`, and `phpcs.ruleset.xml` inside of the `bin/` directory you added:
+
+```bash
+ln -s bin/.travis.yml . && git add .travis.yml
+ln -s bin/.jshintrc . && git add .jshintrc
+ln -s bin/phpcs.ruleset.xml . && git add phpcs.ruleset.xml
+```
+
+Symlink to `pre-commit` from your project's `.git/hooks/pre-commit`:
+
+```bash
+cd .git/hooks
+ln -s ../../bin/pre-commit .
+```
+
+The library includes a WordPress README [parser](class-wordpress-readme-parser.php) and [converter](generate-markdown-readme) to Markdown,
 so you don't have to manually keep your `readme.txt` on WordPress.org in sync with the `readme.md` you have on GitHub. The
 converter will also automatically recognize the presence of projects with Travis CI and include the status image
 in the markdown. Screenshots and banner images for WordPress.org are also automatically incorporated into the `readme.md`.
