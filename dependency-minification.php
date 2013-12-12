@@ -88,7 +88,7 @@ class Dependency_Minification {
 	}
 
 	static function get_rewrite_regex() {
-		return sprintf( '^%s/%s', self::$options['endpoint'], self::FILENAME_PATTERN );
+		return sprintf( '^(?:.*/)?%s/%s', self::$options['endpoint'], self::FILENAME_PATTERN );
 	}
 
 	static function add_rewrite_rule( $rules ) {
