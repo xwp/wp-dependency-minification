@@ -99,7 +99,7 @@ class Dependency_Minification {
 		}
 		$new_rules[$regex] = $redirect;
 
-		return array_merge( $rules, $new_rules );
+		return array_merge( $new_rules, $rules );
 	}
 
 	static function remove_rewrite_rule() {
