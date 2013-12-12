@@ -813,7 +813,7 @@ class Dependency_Minification {
 		try {
 			$is_css = ( 'styles' === $type );
 			if ( 'scripts' === $type ) {
-				require_once( dirname(__FILE__) . '/minify/JS/JSMin.php' );
+				require_once( dirname(__FILE__) . '/minify/JS/JSMinPlus.php' );
 			} elseif ( 'styles' === $type ) {
 				require_once( dirname(__FILE__) . '/minify/CSS/UriRewriter.php' );
 				require_once( dirname(__FILE__) . '/minify/CSS/Compressor.php' );
@@ -883,7 +883,7 @@ class Dependency_Minification {
 			// is the comment-reply.js in WordPress.
 			if ( 'scripts' === $type ) {
 				$minified_contents = join( "\n;;\n", $contents_for_each_dep );
-				$minified_contents = JSMin::minify($minified_contents);
+				$minified_contents = JSMinPlus::minify($minified_contents);
 				if ( false === $minified_contents ) {
 					throw new Dependency_Minification_Exception( 'JavaScript parse error' );
 				}
