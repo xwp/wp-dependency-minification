@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Dependency Minification
  * Description: Concatenates and minifies scripts and stylesheets. Please install and activate <a href="http://scribu.net" target="_blank">scribu</a>'s <a href="http://wordpress.org/plugins/proper-network-activation/" target="_blank">Proper Network Activation</a> plugin <em>before</em> activating this plugin <em>network-wide</em>.
- * Version: 0.9.7
+ * Version: 0.9.8
  * Author: X-Team
  * Author URI: http://x-team.com/wordpress/
  * Text Domain: dependency-minification

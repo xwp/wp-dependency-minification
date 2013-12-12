@@ -1,7 +1,7 @@
 === Dependency Minification ===
 Contributors:      X-team, westonruter, fjarrett, kucrut, shadyvb, alex-ye, c3mdigital, lkraav
 Tags:              performance, dependencies, minify, concatenate, compress, js, javascript, scripts, css, styles, stylesheets, gzip, yslow, pagespeed, caching
-Tested up to:      3.6.1
+Tested up to:      3.8
 Requires at least: 3.5
 Stable tag:        trunk
 License:           GPLv2 or later
@@ -51,6 +51,12 @@ If you are using Nginx with the default Varying Vagrant Vagrants config, you'll 
 
 
 == Changelog ==
+
+= 0.9.8 =
+ * Fix rewrite rule broken by filtering home_url ([#49](https://github.com/x-team/wp-dependency-minification/pull/49)). Props [c3mdigital](http://profiles.wordpress.org/c3mdigital/).
+ * Switch from JSMin to JSMinPlus due to repeated issues with JSMin causing execution timeouts.
+ * Update plugin to indicate WordPress 3.8 compatibility.
+ * Fix expire and purge links.
 
 = 0.9.7 =
 Improve how the plugin guesses the sources' absolute paths ([#34](https://github.com/x-team/wp-dependency-minification/pull/34)). Props [alex-ye](http://profiles.wordpress.org/alex-ye/).
