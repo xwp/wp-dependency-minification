@@ -59,6 +59,7 @@ class Dependency_Minification {
 				'admin_page_capability'               => 'edit_theme_options',
 				'show_error_messages'                 => ( defined( 'WP_DEBUG' ) && WP_DEBUG ),
 				'disable_if_wp_debug'                 => true,
+				'print_manifest'                      => true,
 			),
 			self::$options
 		) );
@@ -866,13 +867,15 @@ class Dependency_Minification {
 			$contents = '';
 
 			// Print a manifest of the dependencies
-			$contents .= sprintf("/*! This minified dependency bundle includes:\n");
-			$i = 0;
-			foreach ( $srcs as $src ) {
-				$i += 1;
-				$contents .= sprintf( " * %02d. %s\n", $i, $src );
+			if ( self::$options['print_manifest'] ) {
+				$contents .= sprintf("/*! This minified dependency bundle includes:\n");
+				$i = 0;
+				foreach ( $srcs as $src ) {
+					$i += 1;
+					$contents .= sprintf( " * %02d. %s\n", $i, $src );
+				}
+				$contents .= sprintf(" */\n\n");
 			}
-			$contents .= sprintf(" */\n\n");
 
 			// Minify
 			// Note: semicolon needed in case a file lacks trailing semicolon
