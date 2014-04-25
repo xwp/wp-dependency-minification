@@ -512,7 +512,7 @@ class Dependency_Minification {
 			$ver_hash,
 			$type === 'scripts' ? 'js' : 'css',
 		) );
-		return $src;
+		return preg_replace( '#^https?:(?=//)#', '', $src );
 	}
 
 	/**
