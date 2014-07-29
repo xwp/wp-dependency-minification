@@ -505,7 +505,7 @@ class Dependency_Minification {
 	static function get_dependency_minified_url( array $deps, $type ) {
 		$src_hash = self::hash_array( wp_list_pluck( $deps, 'src' ) );
 		$ver_hash = self::hash_array( wp_list_pluck( $deps, 'ver' ) );
-		$src = trailingslashit( get_option( 'home' ) . DIRECTORY_SEPARATOR . self::$options['endpoint'] );
+		$src = trailingslashit( site_url( self::$options['endpoint'] ) );
 		$src .= join( '.', array(
 			join( ',', wp_list_pluck( $deps, 'handle' ) ),
 			$src_hash,
