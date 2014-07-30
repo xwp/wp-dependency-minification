@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Dependency Minification
  * Description: Concatenates and minifies scripts and stylesheets. Please install and activate <a href="http://scribu.net" target="_blank">scribu</a>'s <a href="http://wordpress.org/plugins/proper-network-activation/" target="_blank">Proper Network Activation</a> plugin <em>before</em> activating this plugin <em>network-wide</em>.
- * Version: 0.9.7
+ * Version: 0.9.8
  * Author: X-Team
  * Author URI: http://x-team.com/wordpress/
  * Text Domain: dependency-minification
@@ -107,26 +107,26 @@ class Dependency_Minification {
 	static function hook_rewrites() {
 		add_filter( 'query_vars', array( __CLASS__, 'filter_query_vars' ) );
 		add_action( 'pre_get_posts', array( __CLASS__, 'handle_request' ) );
-		self::add_rewrite_rule();
+		add_filter( 'rewrite_rules_array', array( __CLASS__, 'add_rewrite_rule' ), 99999 );
 	}
 
 	static function get_rewrite_regex() {
-		return sprintf( '^%s/%s', self::$options['endpoint'], self::FILENAME_PATTERN );
+		return sprintf( '^(?:.*/)?%s/%s', self::$options['endpoint'], self::FILENAME_PATTERN );
 	}
 
-	static function add_rewrite_rule() {
+	static function add_rewrite_rule( $rules ) {
 		$regex    = self::get_rewrite_regex();
 		$redirect = 'index.php?';
 		for ( $i = 0; $i < count( self::$query_vars ); $i += 1 ) {
 			$redirect .= sprintf( '%s=$matches[%d]&', self::$query_vars[$i], $i + 1 );
 		}
-		add_rewrite_rule( $regex, $redirect, 'top' );
+		$new_rules[$regex] = $redirect;
+
+		return array_merge( $new_rules, $rules );
 	}
 
 	static function remove_rewrite_rule() {
-		$regex = self::get_rewrite_regex();
-		global $wp_rewrite;
-		unset( $wp_rewrite->extra_rules_top[ $regex ] );
+		remove_filter( 'rewrite_rules_array', array( __CLASS__, 'add_rewrite_rule' ), 99999 );
 	}
 
 	protected static $is_footer = array(
@@ -139,7 +139,7 @@ class Dependency_Minification {
 	 */
 	static function activate() {
 		self::setup();
-		self::add_rewrite_rule();
+		add_filter( 'rewrite_rules_array', array( __CLASS__, 'add_rewrite_rule' ), 99999 );
 		flush_rewrite_rules();
 	}
 
@@ -457,7 +457,7 @@ class Dependency_Minification {
 														$_link_params = $link_params;
 														$_link_params['depmin_task'] = 'purge';
 														?>
-														<a class="submitdelete" title="<?php esc_attr_e( 'Delete the cached error to try again.', 'dependency-minification' ) ?>" href="<?php echo esc_url( add_query_arg( $_link_params, admin_url( 'admin-ajax.php' ) ) ) ?>">
+														<a class="submitdelete" title="<?php esc_attr_e( 'Delete the cached error to try again.', 'depmin' ) ?>" href="<?php echo esc_url( admin_url( 'admin-ajax.php' ) . '?' . http_build_query( $_link_params ) ) ?>">
 															<?php esc_html_e( 'Try again', 'dependency-minification' ) ?>
 														</a>
 													</span>
@@ -472,14 +472,14 @@ class Dependency_Minification {
 														$_link_params = $link_params;
 														$_link_params['depmin_task'] = 'expire';
 														?>
-														<a href="<?php echo esc_url( add_query_arg( $_link_params, admin_url( 'admin-ajax.php' ) ) ) ?>" title="<?php esc_attr_e( 'Expire this item to gracefully regenerate', 'dependency-minification' ) ?>"><?php esc_html_e( 'Expire', 'dependency-minification' ) ?></a> |
+														<a href="<?php echo esc_url( admin_url( 'admin-ajax.php' ) . '?' . http_build_query( $_link_params ) ) ?>" title="<?php esc_attr_e( 'Expire this item to gracefully regenerate', 'dependency-minification' ) ?>"><?php esc_html_e( 'Expire', 'dependency-minification' ) ?></a> |
 													</span>
 													<span class="trash">
 														<?php
 														$_link_params = $link_params;
 														$_link_params['depmin_task'] = 'purge';
 														?>
-														<a class="submitdelete" title="<?php esc_attr_e( 'Purge item from cache (delete immediately; NOT recommended)', 'dependency-minification' ) ?>" href="<?php echo esc_url( add_query_arg( $_link_params, admin_url( 'admin-ajax.php' ) ) ) ?>"><?php esc_html_e( 'Purge', 'dependency-minification' ) ?></a> |
+														<a class="submitdelete" title="<?php esc_attr_e( 'Purge item from cache (delete immediately; NOT recommended)', 'dependency-minification' ) ?>" href="<?php echo esc_url( admin_url( 'admin-ajax.php' ) . '?' . http_build_query( $_link_params ) ) ?>"><?php esc_html_e( 'Purge', 'dependency-minification' ) ?></a> |
 													</span>
 													<span class="view">
 														<a href="<?php echo esc_url( $minified_src ) ?>" target="_blank" title="<?php esc_attr_e( 'View minified dependencies (opens in new window)', 'dependency-minification' ) ?>" rel="permalink"><?php esc_html_e( 'View minified', 'dependency-minification' ) ?></a>
@@ -490,7 +490,7 @@ class Dependency_Minification {
 														$_link_params = $link_params;
 														$_link_params['depmin_task'] = 'purge';
 														?>
-														<a class="submitdelete" title="<?php esc_attr_e( 'Delete the cached error to try again.', 'dependency-minification' ) ?>" href="<?php echo esc_url( add_query_arg( $_link_params, admin_url( 'admin-ajax.php' ) ) ) ?>"><?php esc_html_e( 'Try again', 'dependency-minification' ) ?></a>
+														<a class="submitdelete" title="<?php esc_attr_e( 'Delete the cached error to try again.', 'dependency-minification' ) ?>" href="<?php echo esc_url( admin_url( 'admin-ajax.php' ) . '?' . http_build_query( $_link_params ) ) ?>"><?php esc_html_e( 'Try again', 'dependency-minification' ) ?></a>
 													</span>
 												<?php endif; ?>
 											</div>
@@ -627,7 +627,7 @@ class Dependency_Minification {
 	static function get_dependency_minified_url( array $deps, $type ) {
 		$src_hash = self::hash_array( wp_list_pluck( $deps, 'src' ) );
 		$ver_hash = self::hash_array( wp_list_pluck( $deps, 'ver' ) );
-		$src = trailingslashit( home_url( self::$options['endpoint'] ) );
+		$src = trailingslashit( get_option( 'home' ) . DIRECTORY_SEPARATOR . self::$options['endpoint'] );
 		$src .= join(
 			'.', 
 			array(
@@ -636,7 +636,7 @@ class Dependency_Minification {
 				$ver_hash,
 				$type === 'scripts' ? 'js' : 'css',
 			)
-			);
+		);
 		return $src;
 	}
 
@@ -952,7 +952,7 @@ class Dependency_Minification {
 		try {
 			$is_css = ( 'styles' === $type );
 			if ( 'scripts' === $type ) {
-				require_once( dirname( __FILE__ ) . '/minify/JS/JSMin.php' );
+				require_once( dirname( __FILE__ ) . '/minify/JS/JSMinPlus.php' );
 			} elseif ( 'styles' === $type ) {
 				require_once( dirname( __FILE__ ) . '/minify/CSS/UriRewriter.php' );
 				require_once( dirname( __FILE__ ) . '/minify/CSS/Compressor.php' );
@@ -1022,7 +1022,7 @@ class Dependency_Minification {
 			// is the comment-reply.js in WordPress.
 			if ( 'scripts' === $type ) {
 				$minified_contents = join( "\n;;\n", $contents_for_each_dep );
-				$minified_contents = JSMin::minify( $minified_contents );
+				$minified_contents = JSMinPlus::minify( $minified_contents );
 				if ( false === $minified_contents ) {
 					throw new Dependency_Minification_Exception( 'JavaScript parse error' );
 				}

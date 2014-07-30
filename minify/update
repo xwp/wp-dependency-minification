@@ -1,0 +1,25 @@
+#!/usr/bin/env php
+<?php
+
+if ( php_sapi_name() !== 'cli' ) {
+	print "Error: Only executable in CLI mode.\n";
+	exit( 1 );
+}
+
+chdir( __DIR__ . '/../minify' );
+
+$sources = array(
+	"JS/ClosureCompiler.php" => "https://raw.github.com/mrclay/minify/master/min/lib/Minify/JS/ClosureCompiler.php",
+	"JS/JSMin.php" => "https://raw.github.com/mrclay/minify/master/min/lib/JSMin.php",
+	"JS/JSMinPlus.php" => "https://raw.github.com/mrclay/minify/master/min/lib/JSMinPlus.php",
+	"CSS/Compressor.php" => "https://raw.github.com/mrclay/minify/master/min/lib/Minify/CSS/Compressor.php",
+	"CSS/UriRewriter.php" => "https://raw.github.com/mrclay/minify/master/min/lib/Minify/CSS/UriRewriter.php",
+	"CommentPreserver.php" => "https://raw.github.com/mrclay/minify/master/min/lib/Minify/CommentPreserver.php",
+);
+
+foreach( $sources as $path => $url ) {
+	echo "$path => $url\n";
+	$contents = file_get_contents( $url );
+	file_put_contents( $path, $contents ) || exit( 1 );
+	system( sprintf( 'git add %s', escapeshellarg( $path ) ) );
+}
