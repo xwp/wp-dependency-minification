@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<ruleset name="Dependency Minification plugin">
-	<description>We want all WordPress standards but we want to exclude the vendor directories</description>
-
-	<exclude-pattern>/minify/*</exclude-pattern>
-
-	<rule ref="WordPress" />
-</ruleset>
