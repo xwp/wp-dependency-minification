@@ -656,6 +656,7 @@ class Dependency_Minification {
 				$new_handle = sprintf('minified-%d', self::$minified_count);
 				$filtered_handles[] = $new_handle;
 				$src = self::get_dependency_minified_url( $deps, $type );
+				if (is_ssl()) $src = str_replace( 'http', 'https', $src );
 
 				// Deps are registered without versions since the URL includes the version (ver_hash)
 				if ( 'scripts' === $type ) {
