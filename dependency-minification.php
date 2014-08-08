@@ -841,7 +841,8 @@ class Dependency_Minification {
 
 				// Dependency is not self-hosted or it the filesystem read failed, so do HTTP request
 				if ( false === $contents ) {
-					$r = wp_remote_get( $src );
+					$sslverify = apply_filters( 'depmin_https_ssl_verify', empty( $GLOBALS['is_IIS'] ), $src );
+					$r = wp_remote_get( $src, compact( 'sslverify' ) );
 					if ( is_wp_error($r) ) {
 						throw new Exception("Failed to retrieve $src: " . $r->get_error_message());
 					} elseif ( intval( wp_remote_retrieve_response_code( $r ) ) !== 200 ) {
