@@ -118,9 +118,9 @@ class Dependency_Minification {
 		$regex    = self::get_rewrite_regex();
 		$redirect = 'index.php?';
 		for ( $i = 0; $i < count( self::$query_vars ); $i += 1 ) {
-			$redirect .= sprintf( '%s=$matches[%d]&', self::$query_vars[$i], $i + 1 );
+			$redirect .= sprintf( '%s=$matches[%d]&', self::$query_vars[ $i ], $i + 1 );
 		}
-		$new_rules[$regex] = $redirect;
+		$new_rules[ $regex ] = $redirect;
 
 		return array_merge( $new_rules, $rules );
 	}
@@ -361,24 +361,24 @@ class Dependency_Minification {
 				$option_names = $wpdb->get_col( $sql );
 				$minified_dependencies = array();
 				foreach ( $option_names as $option_name ) {
-					$minified_dependencies[$option_name] = get_option( $option_name );
+					$minified_dependencies[ $option_name ] = get_option( $option_name );
 				}
 				$minified_dependencies = array_filter( $minified_dependencies );
 
 				$minify_crons = array();
 				foreach ( _get_cron_array() as $timestamp => $cron ) {
-					if ( isset( $cron[self::CRON_MINIFY_ACTION] ) ) {
-						foreach ( $cron[self::CRON_MINIFY_ACTION] as $key => $min_cron ) {
+					if ( isset( $cron[ self::CRON_MINIFY_ACTION ] ) ) {
+						foreach ( $cron[ self::CRON_MINIFY_ACTION ] as $key => $min_cron ) {
 							$cached = $min_cron['args'][0];
 							$src_hash = self::hash_array( wp_list_pluck( $cached['deps'], 'src' ) );
 							$cache_option_name = self::get_cache_option_name( $src_hash );
 							if ( array_key_exists( $cache_option_name, $minified_dependencies ) ) {
-								$minified_dependencies[$cache_option_name] = array_merge(
-									$minified_dependencies[$cache_option_name],
+								$minified_dependencies[ $cache_option_name ] = array_merge(
+									$minified_dependencies[ $cache_option_name ],
 									$cached
 								);
 							} else {
-								$minified_dependencies[$cache_option_name] = $cached;
+								$minified_dependencies[ $cache_option_name ] = $cached;
 							}
 						}
 					}
@@ -445,7 +445,7 @@ class Dependency_Minification {
 									<td class="column-dependencies">
 										<strong>
 											<?php for ( $i = 0; $i < count( $deps ); $i += 1 ) : ?>
-												<a href="<?php echo esc_url( $deps[$i]['src'] ) ?>" target="_blank" title="<?php esc_attr_e( 'View unminified source (opens in new window)', 'dependency-minification' ) ?>"><?php echo esc_html( $deps[$i]['handle'] ) ?></a><?php if ( $i + 1 < count( $handles ) ) { esc_html_e( ', ' ); } ?>
+												<a href="<?php echo esc_url( $deps[ $i ]['src'] ) ?>" target="_blank" title="<?php esc_attr_e( 'View unminified source (opens in new window)', 'dependency-minification' ) ?>"><?php echo esc_html( $deps[ $i ]['handle'] ) ?></a><?php if ( $i + 1 < count( $handles ) ) { esc_html_e( ', ' ); } ?>
 											<?php endfor; ?>
 										</strong>
 										<?php if ( ! empty( $error ) ) : ?>
@@ -629,12 +629,12 @@ class Dependency_Minification {
 		$ver_hash = self::hash_array( wp_list_pluck( $deps, 'ver' ) );
 		$src = trailingslashit( get_option( 'home' ) . DIRECTORY_SEPARATOR . self::$options['endpoint'] );
 		$src .= join(
-			'.', 
+			'.',
 			array(
 				join( ',', wp_list_pluck( $deps, 'handle' ) ),
 				$src_hash,
 				$ver_hash,
-				$type === 'scripts' ? 'js' : 'css',
+				( 'scripts' === $type ) ? 'js' : 'css',
 			)
 		);
 		return $src;
@@ -669,19 +669,15 @@ class Dependency_Minification {
 		}
 
 		// @todo There should be a better way to determine which group we are in
-		$current_group = (int) self::$is_footer[$type]; // false => 0, true => 1
+		$current_group = (int) self::$is_footer[ $type ]; // false => 0, true => 1
 
 		$handles_in_group = array();
 		foreach ( $handles as $handle ) {
 			$must_process_handle = (
-				$wp_deps->groups[$handle] === $current_group
+				$wp_deps->groups[ $handle ] === $current_group
 				||
 				// Handle case where script is erroneously enqueued without in_footer=true (here's lookin at you, PollDaddy)
-				(
-					$wp_deps->groups[$handle] < $current_group
-					&&
-					! in_array( $handle, $wp_deps->done )
-				)
+				( $wp_deps->groups[ $handle ] < $current_group && ! in_array( $handle, $wp_deps->done ) )
 			);
 
 			if ( $must_process_handle ) {
@@ -708,8 +704,8 @@ class Dependency_Minification {
 			foreach ( $group['handles'] as $handle ) {
 				$deps[] = array(
 					'handle' => $handle,
-					'src' => $wp_deps->registered[$handle]->src,
-					'ver' => $wp_deps->registered[$handle]->ver,
+					'src' => $wp_deps->registered[ $handle ]->src,
+					'ver' => $wp_deps->registered[ $handle ]->ver,
 				);
 			}
 			$srcs = wp_list_pluck( $deps, 'src' );
@@ -723,21 +719,9 @@ class Dependency_Minification {
 				$cached_ver_hash = self::hash_array( wp_list_pluck( $cached['deps'], 'ver' ) );
 			}
 
-			$is_error = (
-				! empty( $cached['error'] )
-				&&
-				$ver_hash === $cached_ver_hash
-				&&
-				time() < $cached['expires']
-			);
+			$is_error = ( ! empty( $cached['error'] ) && $ver_hash === $cached_ver_hash && time() < $cached['expires'] );
 
-			$is_stale = (
-				empty( $cached )
-				||
-				time() > $cached['expires']
-				||
-				$ver_hash !== $cached_ver_hash
-			);
+			$is_stale = ( empty( $cached ) || time() > $cached['expires'] || $ver_hash !== $cached_ver_hash );
 
 			if ( $is_error ) {
 				if ( self::$options['show_error_messages'] ) {
@@ -791,27 +775,27 @@ class Dependency_Minification {
 					wp_register_style( $new_handle, $src, array(), null, $extra['media'] );
 				}
 				$wp_deps->set_group( $new_handle, /*recursive*/false, $current_group );
-				$new_dep = $wp_deps->registered[$new_handle];
+				$new_dep = $wp_deps->registered[ $new_handle ];
 				$new_extra = array(
 					'data' => '',
 				);
 				foreach ( $group['handles'] as $handle ) {
 
 					// Aggregate data from scripts (e.g. wp_localize_script)
-					if ( ! empty( $wp_deps->registered[$handle]->extra ) ) {
+					if ( ! empty( $wp_deps->registered[ $handle ]->extra ) ) {
 
-						foreach ( array_keys( $wp_deps->registered[$handle]->extra ) as $extra_key ) {
+						foreach ( array_keys( $wp_deps->registered[ $handle ]->extra ) as $extra_key ) {
 							$data = $wp_deps->get_data( $handle, $extra_key );
 
 							if ( 'data' === $extra_key ) {
 								$new_extra['data'] .= "/* wp_localize_script($handle): */\n";
 								$new_extra['data'] .= "$data\n\n";
 							} else {
-								if ( isset( $new_extra[$extra_key] ) ) {
+								if ( isset( $new_extra[ $extra_key ] ) ) {
 									// The handles should have been grouped so that they have the same extras
-									assert( $new_extra[$extra_key] === $data );
+									assert( $new_extra[ $extra_key ] === $data );
 								}
-								$new_extra[$extra_key] = $data;
+								$new_extra[ $extra_key ] = $data;
 							}
 						}
 					}
@@ -828,7 +812,7 @@ class Dependency_Minification {
 		}
 
 		// @todo Must be a better way to do this
-		self::$is_footer[$type] = true; // for the next invocation
+		self::$is_footer[ $type ] = true; // for the next invocation
 
 		return $filtered_handles;
 	}
@@ -840,23 +824,15 @@ class Dependency_Minification {
 	static function is_self_hosted_src( $src ) {
 		$parsed_url = parse_url( $src );
 		return (
-			(
-				empty( $parsed_url['host'] )
-				&&
-				substr( $parsed_url['path'], 0, 1 ) === '/'
-			)
+			( empty( $parsed_url['host'] ) && '/' === substr( $parsed_url['path'], 0, 1 ) )
 			||
-			(
-				! empty( $parsed_url['host'] )
-				&&
-				$parsed_url['host'] === parse_url( get_home_url(), PHP_URL_HOST )
-			)
+			( ! empty( $parsed_url['host'] ) && $parsed_url['host'] === parse_url( get_home_url(), PHP_URL_HOST ) )
 		);
 	}
 
 	static function is_url_included( $needle, $haystack ) {
 		foreach ( $haystack as $entry ) {
-			if ( strpos( $needle, $entry ) !== false ) {
+			if ( false !== strpos( $needle, $entry ) ) {
 				return true;
 			}
 		}
@@ -874,7 +850,7 @@ class Dependency_Minification {
 		// First create groups based on whether they are excluded from minification
 		$last_was_excluded = null;
 		foreach ( $handles as $handle ) {
-			$src = $wp_deps->registered[$handle]->src;
+			$src = $wp_deps->registered[ $handle ]->src;
 			$is_local = self::is_self_hosted_src( $src );
 			$is_excluded = ! $is_local && self::$options['default_exclude_remote_dependencies'];
 			$is_excluded = $is_excluded || self::is_url_included( $src, self::$options['exclude_dependencies'] );
@@ -919,7 +895,7 @@ class Dependency_Minification {
 	static function group_handles_by_extra( array $handles, WP_Dependencies $wp_deps ) {
 		$bundles = array();
 		foreach ( $handles as $handle ) {
-			$dep = &$wp_deps->registered[$handle];
+			$dep = &$wp_deps->registered[ $handle ];
 			$extra = (array) $dep->extra;
 			if ( is_a( $wp_deps, 'WP_Styles' ) ) {
 				$extra['media'] = is_string( $dep->args ) ? $dep->args : 'all';
@@ -933,7 +909,7 @@ class Dependency_Minification {
 			}
 			ksort( $extra );
 			$key = serialize( $extra );
-			$bundles[$key][] = $handle;
+			$bundles[ $key ][] = $handle;
 		}
 		return $bundles;
 	}
@@ -983,7 +959,7 @@ class Dependency_Minification {
 					$r = wp_remote_get( $src );
 					if ( is_wp_error( $r ) ) {
 						throw new Exception( "Failed to retrieve $src: " . $r->get_error_message() );
-					} elseif ( intval( wp_remote_retrieve_response_code( $r ) ) !== 200 ) {
+					} elseif ( 200 !== intval( wp_remote_retrieve_response_code( $r ) ) ) {
 						throw new Dependency_Minification_Exception( sprintf( 'Request for %s returned with HTTP %d %s', $src, wp_remote_retrieve_response_code( $r ), wp_remote_retrieve_response_message( $r ) ) );
 					}
 					$contents = wp_remote_retrieve_body( $r );
@@ -999,7 +975,7 @@ class Dependency_Minification {
 					$contents = Minify_CSS_UriRewriter::rewrite( $contents, ABSPATH . $src_dir_path );
 				}
 
-				$contents_for_each_dep[$src] = $contents;
+				$contents_for_each_dep[ $src ] = $contents;
 			}
 
 			$contents = '';
@@ -1103,21 +1079,9 @@ class Dependency_Minification {
 			$is_not_modified = false;
 			if ( time() < $cached['expires'] ) {
 				$is_not_modified = self::$options['allow_not_modified_responses'] && (
-					(
-						! empty( $_SERVER['HTTP_IF_NONE_MATCH'] )
-						&&
-						! empty( $cached['etag'] )
-						&&
-						trim( $_SERVER['HTTP_IF_NONE_MATCH'] ) === $cached['etag']
-					)
+					( ! empty( $_SERVER['HTTP_IF_NONE_MATCH'] ) && ! empty( $cached['etag'] ) && trim( $_SERVER['HTTP_IF_NONE_MATCH'] ) === $cached['etag'] )
 					||
-					(
-						! empty( $_SERVER['HTTP_IF_MODIFIED_SINCE'] )
-						&&
-						! empty( $cached['last_modified'] )
-						&&
-						strtotime( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) <= $cached['last_modified']
-					)
+					( ! empty( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) && ! empty( $cached['last_modified'] ) && strtotime( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) <= $cached['last_modified'] )
 				);
 			}
 
@@ -1158,9 +1122,9 @@ class Dependency_Minification {
 			} else {
 				error_log(
 					sprintf(
-						'%s: %s via URI %s', 
-						__METHOD__, 
-						$e->getMessage(), 
+						'%s: %s via URI %s',
+						__METHOD__,
+						$e->getMessage(),
 						esc_url_raw( $_SERVER['REQUEST_URI'] )
 						)
 					);
