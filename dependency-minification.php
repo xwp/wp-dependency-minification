@@ -499,16 +499,16 @@ class Dependency_Minification {
 									<td class="count column-count"><?php echo esc_html( count( $handles ) ) ?></td>
 									<td class="count column-compression">
 				<?php
-					if ( empty( $unminified_size ) ) {
-						esc_html_e( 'N/A', 'dependency-minification' );
-					} else {
-						$min = strlen( $contents );
-						$max = $unminified_size;
-						$percentage = round( 100 - ( $min / $max ) * 100 );
-						printf( '<meter min=0 max=100 value="%d" title="%s">', $percentage, esc_attr( sprintf( __( '(%1$d / %2$d)', 'dependency-minification' ), $min, $max ) ) );
-						print esc_html( sprintf( __( '%1$d%%', 'dependency-minification' ), $percentage ) );
-						print '</meter>';
-					}
+				if ( empty( $unminified_size ) ) {
+					esc_html_e( 'N/A', 'dependency-minification' );
+				} else {
+					$min = strlen( $contents );
+					$max = $unminified_size;
+					$percentage = round( 100 - ( $min / $max ) * 100 );
+					printf( '<meter min=0 max=100 value="%d" title="%s">', $percentage, esc_attr( sprintf( __( '(%1$d / %2$d)', 'dependency-minification' ), $min, $max ) ) );
+					print esc_html( sprintf( __( '%1$d%%', 'dependency-minification' ), $percentage ) );
+					print '</meter>';
+				}
 				?>
 									</td>
 									<td class="type column-type"><?php echo esc_html( $type ) ?></td>
