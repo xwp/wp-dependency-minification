@@ -355,35 +355,35 @@ class Dependency_Minification {
 				<input type="hidden" name="action" value="<?php echo esc_attr( self::AJAX_ACTION ) ?>">
 				<input type="hidden" name="_wpnonce" value="<?php echo esc_attr( $nonce ) ?>">
 
-				<?php
-				global $wpdb;
-				$sql = $wpdb->prepare( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE %s", self::CACHE_KEY_PREFIX . '%' );
-				$option_names = $wpdb->get_col( $sql );
-				$minified_dependencies = array();
-				foreach ( $option_names as $option_name ) {
-					$minified_dependencies[ $option_name ] = get_option( $option_name );
-				}
-				$minified_dependencies = array_filter( $minified_dependencies );
+		<?php
+		global $wpdb;
+		$sql = $wpdb->prepare( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE %s", self::CACHE_KEY_PREFIX . '%' );
+		$option_names = $wpdb->get_col( $sql );
+		$minified_dependencies = array();
+		foreach ( $option_names as $option_name ) {
+			$minified_dependencies[ $option_name ] = get_option( $option_name );
+		}
+		$minified_dependencies = array_filter( $minified_dependencies );
 
-				$minify_crons = array();
-				foreach ( _get_cron_array() as $timestamp => $cron ) {
-					if ( isset( $cron[ self::CRON_MINIFY_ACTION ] ) ) {
-						foreach ( $cron[ self::CRON_MINIFY_ACTION ] as $key => $min_cron ) {
-							$cached = $min_cron['args'][0];
-							$src_hash = self::hash_array( wp_list_pluck( $cached['deps'], 'src' ) );
-							$cache_option_name = self::get_cache_option_name( $src_hash );
-							if ( array_key_exists( $cache_option_name, $minified_dependencies ) ) {
-								$minified_dependencies[ $cache_option_name ] = array_merge(
-									$minified_dependencies[ $cache_option_name ],
-									$cached
-								);
-							} else {
-								$minified_dependencies[ $cache_option_name ] = $cached;
-							}
-						}
+		$minify_crons = array();
+		foreach ( _get_cron_array() as $timestamp => $cron ) {
+			if ( isset( $cron[ self::CRON_MINIFY_ACTION ] ) ) {
+				foreach ( $cron[ self::CRON_MINIFY_ACTION ] as $key => $min_cron ) {
+					$cached = $min_cron['args'][0];
+					$src_hash = self::hash_array( wp_list_pluck( $cached['deps'], 'src' ) );
+					$cache_option_name = self::get_cache_option_name( $src_hash );
+					if ( array_key_exists( $cache_option_name, $minified_dependencies ) ) {
+						$minified_dependencies[ $cache_option_name ] = array_merge(
+							$minified_dependencies[ $cache_option_name ],
+							$cached
+						);
+					} else {
+						$minified_dependencies[ $cache_option_name ] = $cached;
 					}
 				}
-				?>
+			}
+		}
+		?>
 
 				<?php if ( self::$options['disable_if_wp_debug'] && ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ): ?>
 					<div class="error">
@@ -497,19 +497,20 @@ class Dependency_Minification {
 										<?php endif; ?>
 									</td>
 									<td class="count column-count"><?php echo esc_html( count( $handles ) ) ?></td>
-									<td class="count column-compression"><?php
-										if ( empty( $unminified_size ) ) {
-											esc_html_e( 'N/A', 'dependency-minification' );
-										} else {
-											$min = strlen( $contents );
-											$max = $unminified_size;
-											$percentage = round( 100 - ( $min / $max ) * 100 );
-											printf( '<meter min=0 max=100 value="%d" title="%s">', $percentage, esc_attr( sprintf( __( '(%1$d / %2$d)', 'dependency-minification' ), $min, $max ) ) );
-											print esc_html( sprintf( __( '%1$d%%', 'dependency-minification' ), $percentage ) );
-											print '</meter>';
-										}
-
-									?></td>
+									<td class="count column-compression">
+				<?php
+					if ( empty( $unminified_size ) ) {
+						esc_html_e( 'N/A', 'dependency-minification' );
+					} else {
+						$min = strlen( $contents );
+						$max = $unminified_size;
+						$percentage = round( 100 - ( $min / $max ) * 100 );
+						printf( '<meter min=0 max=100 value="%d" title="%s">', $percentage, esc_attr( sprintf( __( '(%1$d / %2$d)', 'dependency-minification' ), $min, $max ) ) );
+						print esc_html( sprintf( __( '%1$d%%', 'dependency-minification' ), $percentage ) );
+						print '</meter>';
+					}
+				?>
+									</td>
 									<td class="type column-type"><?php echo esc_html( $type ) ?></td>
 									<?php
 									$date_cols = array(
@@ -649,8 +650,8 @@ class Dependency_Minification {
 	 */
 	static function filter_print_dependency_array( array $handles, $type ) {
 		assert( in_array( $type, array( 'scripts', 'styles' ) ) );
-		assert( isset( $GLOBALS["wp_{$type}"] ) );
-		$wp_deps = &$GLOBALS["wp_{$type}"];
+		assert( isset( $GLOBALS[ 'wp_' . $type ] ) );
+		$wp_deps = &$GLOBALS[ 'wp_' . $type ];
 		assert( is_a( $wp_deps, 'WP_Dependencies' ) );
 
 		/**
