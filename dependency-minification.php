@@ -3,15 +3,15 @@
  * Plugin Name: Dependency Minification
  * Description: Concatenates and minifies scripts and stylesheets. Please install and activate <a href="http://scribu.net" target="_blank">scribu</a>'s <a href="http://wordpress.org/plugins/proper-network-activation/" target="_blank">Proper Network Activation</a> plugin <em>before</em> activating this plugin <em>network-wide</em>.
  * Version: 0.9.8
- * Author: X-Team
- * Author URI: http://x-team.com/wordpress/
+ * Author: XWP
+ * Author URI: https://xwp.co/
  * Text Domain: dependency-minification
  * License: GPLv2+
  * Domain Path: /languages
  */
 
 /**
- * Copyright (c) 2013 X-Team (http://x-team.com/)
+ * Copyright (c) 2013 XWP (https://xwp.co/)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2 or, at

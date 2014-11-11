@@ -3,12 +3,14 @@
 
 Automatically concatenates and minifies any scripts and stylesheets enqueued using the standard dependency system.
 
-**Contributors:** [x-team](http://profiles.wordpress.org/x-team), [westonruter](http://profiles.wordpress.org/westonruter), [fjarrett](http://profiles.wordpress.org/fjarrett), [kucrut](http://profiles.wordpress.org/kucrut), [shadyvb](http://profiles.wordpress.org/shadyvb), [alex-ye](http://profiles.wordpress.org/alex-ye), [c3mdigital](http://profiles.wordpress.org/c3mdigital), [lkraav](http://profiles.wordpress.org/lkraav)  
+**Contributors:** [xwp](http://profiles.wordpress.org/xwp), [westonruter](http://profiles.wordpress.org/westonruter), [fjarrett](http://profiles.wordpress.org/fjarrett), [kucrut](http://profiles.wordpress.org/kucrut), [shadyvb](http://profiles.wordpress.org/shadyvb), [alex-ye](http://profiles.wordpress.org/alex-ye), [c3mdigital](http://profiles.wordpress.org/c3mdigital), [lkraav](http://profiles.wordpress.org/lkraav)  
 **Tags:** [performance](http://wordpress.org/plugins/tags/performance), [dependencies](http://wordpress.org/plugins/tags/dependencies), [minify](http://wordpress.org/plugins/tags/minify), [concatenate](http://wordpress.org/plugins/tags/concatenate), [compress](http://wordpress.org/plugins/tags/compress), [js](http://wordpress.org/plugins/tags/js), [javascript](http://wordpress.org/plugins/tags/javascript), [scripts](http://wordpress.org/plugins/tags/scripts), [css](http://wordpress.org/plugins/tags/css), [styles](http://wordpress.org/plugins/tags/styles), [stylesheets](http://wordpress.org/plugins/tags/stylesheets), [gzip](http://wordpress.org/plugins/tags/gzip), [yslow](http://wordpress.org/plugins/tags/yslow), [pagespeed](http://wordpress.org/plugins/tags/pagespeed), [caching](http://wordpress.org/plugins/tags/caching)  
 **Requires at least:** 3.5  
 **Tested up to:** 3.8  
 **Stable tag:** trunk (master)  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
+
+[![Build Status](https://travis-ci.org/xwp/wp-dependency-minification.png?branch=master)](https://travis-ci.org/xwp/wp-dependency-minification) 
 
 ## Description ##
 
@@ -39,7 +41,7 @@ which this plugin now supersedes.
  * Can serve compressed responses with `gzip` or `deflate`.
  * Transforms relatives paths in stylesheets (e.g. background-images) to absolute ones, so that they don't 404.
 
-**Development of this plugin is done [on GitHub](https://github.com/x-team/wp-dependency-minification). Pull requests welcome. Please see [issues](https://github.com/x-team/wp-dependency-minification/issues) reported there before going to the plugin forum.**
+**Development of this plugin is done [on GitHub](https://github.com/xwp/wp-dependency-minification). Pull requests welcome. Please see [issues](https://github.com/xwp/wp-dependency-minification/issues) reported there before going to the plugin forum.**
 
 If you are using Nginx with the default Varying Vagrant Vagrants config, you'll want to remove `css|js` from this rule in `nginx-wp-common.conf` (or remove the rule altogether):
 
@@ -50,36 +52,34 @@ If you are using Nginx with the default Varying Vagrant Vagrants config, you'll 
         log_not_found off;
     }
 
-[![Build Status](https://travis-ci.org/x-team/wp-dependency-minification.png?branch=master)](https://travis-ci.org/x-team/wp-dependency-minification)
-
 ## Changelog ##
 
 ### 0.9.8 ###
-* Fix rewrite rule broken by filtering home_url ([#49](https://github.com/x-team/wp-dependency-minification/pull/49)). Props [c3mdigital](http://profiles.wordpress.org/c3mdigital/).
+* Fix rewrite rule broken by filtering home_url ([#49](https://github.com/xwp/wp-dependency-minification/pull/49)). Props [c3mdigital](http://profiles.wordpress.org/c3mdigital/).
  * Switch from JSMin to JSMinPlus due to repeated issues with JSMin causing execution timeouts.
  * Update plugin to indicate WordPress 3.8 compatibility.
  * Fix expire and purge links.
 
 ### 0.9.7 ###
-Improve how the plugin guesses the sources' absolute paths ([#34](https://github.com/x-team/wp-dependency-minification/pull/34)). Props [alex-ye](http://profiles.wordpress.org/alex-ye/).
+Improve how the plugin guesses the sources' absolute paths ([#34](https://github.com/xwp/wp-dependency-minification/pull/34)). Props [alex-ye](http://profiles.wordpress.org/alex-ye/).
 
 ### 0.9.6 ###
-Improve network activation and deactivation ([#37](https://github.com/x-team/wp-dependency-minification/pull/37)). Props [kucrut](http://profiles.wordpress.org/kucrut/).
+Improve network activation and deactivation ([#37](https://github.com/xwp/wp-dependency-minification/pull/37)). Props [kucrut](http://profiles.wordpress.org/kucrut/).
 
 ### 0.9.5 ###
-Fix wp_localize_script data lost in minification ([#28](https://github.com/x-team/wp-dependency-minification/issues/28)). Props [lkraav](http://profiles.wordpress.org/lkraav/).
+Fix wp_localize_script data lost in minification ([#28](https://github.com/xwp/wp-dependency-minification/issues/28)). Props [lkraav](http://profiles.wordpress.org/lkraav/).
 
 ### 0.9.4 ###
-Issue warning if pretty permalinks are not enabled ([#16](https://github.com/x-team/wp-dependency-minification/issues/16)). Props [shadyvb](http://profiles.wordpress.org/shadyvb/).
+Issue warning if pretty permalinks are not enabled ([#16](https://github.com/xwp/wp-dependency-minification/issues/16)). Props [shadyvb](http://profiles.wordpress.org/shadyvb/).
 
 ### 0.9.3 ###
-Prevent default built-in scripts from breaking minification groups ([#9](https://github.com/x-team/wp-dependency-minification/issues/9)). Props [shadyvb](http://profiles.wordpress.org/shadyvb/).
+Prevent default built-in scripts from breaking minification groups ([#9](https://github.com/xwp/wp-dependency-minification/issues/9)). Props [shadyvb](http://profiles.wordpress.org/shadyvb/).
 
 ### 0.9.2 ###
-Show alert if WP_DEBUG is disabling dependency minification ([#12](https://github.com/x-team/wp-dependency-minification/issues/12)). Props [c3mdigital](http://profiles.wordpress.org/c3mdigital/).
+Show alert if WP_DEBUG is disabling dependency minification ([#12](https://github.com/xwp/wp-dependency-minification/issues/12)). Props [c3mdigital](http://profiles.wordpress.org/c3mdigital/).
 
 ### 0.9.1 ###
-Add a settings link to the list of plugin action links ([#13](https://github.com/x-team/wp-dependency-minification/issues/13)). Props [fjarrett](http://profiles.wordpress.org/fjarrett/).
+Add a settings link to the list of plugin action links ([#13](https://github.com/xwp/wp-dependency-minification/issues/13)). Props [fjarrett](http://profiles.wordpress.org/fjarrett/).
 
 ### 0.9 beta ###
 First Release
