@@ -10,6 +10,8 @@ Automatically concatenates and minifies any scripts and stylesheets enqueued usi
 **Stable tag:** trunk (master)  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
 
+[![Build Status](https://travis-ci.org/x-team/wp-dependency-minification.png?branch=master)](https://travis-ci.org/x-team/wp-dependency-minification) 
+
 ## Description ##
 
 This plugin takes all scripts and stylesheets that have been added via `wp_enqueue_script` and `wp_enqueue_style`
@@ -49,8 +51,6 @@ If you are using Nginx with the default Varying Vagrant Vagrants config, you'll 
         expires 24h;
         log_not_found off;
     }
-
-[![Build Status](https://travis-ci.org/x-team/wp-dependency-minification.png?branch=master)](https://travis-ci.org/x-team/wp-dependency-minification)
 
 ## Changelog ##
 
