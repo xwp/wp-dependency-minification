@@ -1013,6 +1013,7 @@ class Dependency_Minification {
 			$max_age = apply_filters( 'dependency_minification_cache_control_max_age', (int) self::$options['cache_control_max_age_cache'], $srcs );
 			$cached['contents'] = $contents;
 			$cached['expires'] = time() + $max_age;
+			$cached['max_age'] = $max_age;
 			$cached['error'] = null;
 		}
 		catch (Exception $e) {
@@ -1070,6 +1071,7 @@ class Dependency_Minification {
 
 			// Send the response headers for caching
 			header( 'Expires: ' . str_replace( '+0000', 'GMT', gmdate( 'r', $cached['expires'] ) ) );
+			header( 'Cache-Control: ' . 'public, max-age=' . $cached['max_age'] );
 			if ( ! empty( $cached['last_modified'] ) ) {
 				header( 'Last-Modified: ' . str_replace( '+0000', 'GMT', gmdate( 'r', $cached['last_modified'] ) ) );
 			}
